@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFFFFF" />
   <title>Trilha de Estudo — TypeScript & LeetCode</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,6 +38,7 @@
 
     html {
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
@@ -46,6 +48,7 @@
       color: var(--ink);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     code, pre {
@@ -70,7 +73,20 @@
       outline-offset: 2px;
     }
 
-    /* Layout principal: barra lateral fixa + caderno de bancada */
+    /* Barra superior exclusiva para mobile/tablet */
+    .mobile-topbar {
+      display: none;
+    }
+
+    .mobile-bottomnav {
+      display: none;
+    }
+
+    .mobile-sync-backdrop {
+      display: none;
+    }
+
+    /* Layout desktop: barra lateral fixa + caderno de bancada */
     .shell {
       display: grid;
       grid-template-columns: 280px minmax(0, 1fr);
@@ -87,7 +103,7 @@
       padding: 24px 20px 32px;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 20px;
     }
 
     .brand {
@@ -122,7 +138,7 @@
       color: var(--muted);
     }
 
-    /* Progresso lateral */
+    /* Progresso */
     .progress-box {
       background: var(--surface-soft);
       border: 1px solid var(--line);
@@ -171,65 +187,16 @@
     .progress-stats {
       margin-top: 10px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      font-size: 12px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      font-size: 11.5px;
       color: var(--muted);
     }
 
     .progress-stats strong {
       display: block;
-      font-size: 14px;
-      color: var(--ink);
-    }
-
-    /* Navegação */
-    .nav-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .nav-heading {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      padding: 4px 10px;
-      margin-top: 4px;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      border-radius: var(--radius-sm);
       font-size: 13.5px;
-      font-weight: 500;
       color: var(--ink);
-    }
-
-    .nav-link:hover {
-      background: var(--surface-soft);
-      text-decoration: none;
-    }
-
-    .nav-count {
-      font-size: 12px;
-      color: var(--muted);
-      background: var(--bg);
-      padding: 1px 7px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-    }
-
-    .rail-footer {
-      margin-top: auto;
-      padding-top: 16px;
-      border-top: 1px solid var(--line);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
     }
 
     /* Sincronização na nuvem */
@@ -257,8 +224,8 @@
     }
 
     .sync-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: #94A3B8;
       flex-shrink: 0;
@@ -283,9 +250,9 @@
     .sync-input {
       flex: 1;
       min-width: 0;
-      padding: 6px 8px;
+      padding: 7px 9px;
       font-family: inherit;
-      font-size: 12.5px;
+      font-size: 13px;
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       background: var(--surface);
@@ -297,9 +264,9 @@
       color: #FFFFFF;
       border: none;
       border-radius: var(--radius-sm);
-      padding: 6px 10px;
+      padding: 7px 11px;
       font-family: inherit;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
@@ -318,6 +285,55 @@
     .sync-btn.secondary:hover {
       color: var(--ink);
       border-color: var(--line-strong);
+    }
+
+    /* Navegação lateral */
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .nav-heading {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 4px 10px;
+      margin-top: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .nav-link:hover {
+      background: var(--surface-soft);
+      text-decoration: none;
+    }
+
+    .nav-count {
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 1px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+    }
+
+    .rail-footer {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .btn-ghost {
@@ -347,14 +363,14 @@
     }
 
     .hero {
-      padding-bottom: 28px;
+      padding-bottom: 26px;
       border-bottom: 1px solid var(--line);
       margin-bottom: 32px;
     }
 
     .hero h1 {
       margin: 0 0 10px;
-      font-size: clamp(26px, 3.2vw, 36px);
+      font-size: clamp(24px, 3vw, 35px);
       line-height: 1.18;
       font-weight: 800;
       letter-spacing: -0.02em;
@@ -365,11 +381,11 @@
       margin: 0;
       max-width: 68ch;
       color: var(--muted);
-      font-size: 15.5px;
+      font-size: 15px;
     }
 
     .routine-strip {
-      margin-top: 22px;
+      margin-top: 20px;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
@@ -414,7 +430,7 @@
       align-items: baseline;
       justify-content: space-between;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .section-head h2 {
@@ -429,6 +445,258 @@
       color: var(--muted);
       font-size: 14.5px;
       max-width: 72ch;
+    }
+
+    /* =========================================
+       MÓDULO TEÓRICO (Leitura rápida + Flashcards)
+       ========================================= */
+    .theory-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .theory-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .theory-card.read {
+      border-color: #B7E4CE;
+      background: #FAFEFC;
+    }
+
+    .theory-header {
+      padding: 15px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .theory-check {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--ok-green);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .theory-head-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .theory-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .theory-title {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .theory-summary {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+
+    .theory-details {
+      border-top: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .theory-details summary {
+      padding: 11px 18px;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ts-blue);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .theory-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .theory-details summary::after {
+      content: 'Abrir aula';
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--ts-blue-soft);
+      color: var(--ts-blue);
+    }
+
+    .theory-details[open] summary::after {
+      content: 'Fechar';
+      background: var(--bg);
+      color: var(--muted);
+    }
+
+    .theory-body {
+      padding: 4px 18px 18px;
+      display: grid;
+      gap: 12px;
+      font-size: 14.5px;
+      color: var(--ink);
+    }
+
+    .theory-body p {
+      margin: 0;
+    }
+
+    .theory-bullets {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .theory-code {
+      background: var(--code-bg);
+      color: var(--code-ink);
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      line-height: 1.55;
+      overflow-x: auto;
+      margin: 0;
+      white-space: pre;
+    }
+
+    .theory-rule {
+      background: var(--ts-blue-soft);
+      border-left: 3px solid var(--ts-blue);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      color: var(--ts-blue-dark);
+    }
+
+    .bigo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .bigo-table th,
+    .bigo-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .bigo-table th {
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .bigo-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Flashcards de bolso */
+    .flashcard-panel {
+      margin-top: 22px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .flashcard-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .flashcard-top h3 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .flashcard-stage {
+      width: 100%;
+      min-height: 185px;
+      background: var(--surface-soft);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 22px 20px;
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--ink);
+    }
+
+    .flashcard-stage.flipped {
+      background: #F4FBF7;
+      border-color: var(--ok-green);
+    }
+
+    .flashcard-tag {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ts-blue);
+    }
+
+    .flashcard-stage.flipped .flashcard-tag {
+      color: var(--ok-green);
+    }
+
+    .flashcard-text {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+
+    .flashcard-stage.flipped .flashcard-text {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .flashcard-hint {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .flashcard-controls {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .flashcard-nav {
+      display: flex;
+      gap: 8px;
     }
 
     /* Colinha de sintaxe */
@@ -487,7 +755,7 @@
       border-left: 3px solid var(--ok-green);
     }
 
-    /* Quiz rápido de sintaxe */
+    /* Quiz rápido */
     .quiz-box {
       margin-top: 18px;
       background: var(--surface);
@@ -498,9 +766,10 @@
 
     .quiz-top {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 12px;
     }
 
@@ -511,7 +780,7 @@
     }
 
     .quiz-score {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       color: var(--ts-blue);
       background: var(--ts-blue-soft);
@@ -524,9 +793,10 @@
       color: var(--code-ink);
       padding: 12px 14px;
       border-radius: var(--radius-sm);
-      font-size: 13px;
+      font-size: 12.5px;
       overflow-x: auto;
       margin: 10px 0 14px;
+      white-space: pre;
     }
 
     .quiz-options {
@@ -539,11 +809,12 @@
       background: var(--surface-soft);
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
-      padding: 10px 12px;
+      padding: 11px 13px;
       font-family: inherit;
-      font-size: 13.5px;
+      font-size: 14px;
       color: var(--ink);
       cursor: pointer;
+      min-height: 44px;
     }
 
     .quiz-opt:hover:not(:disabled) {
@@ -582,11 +853,12 @@
       color: #FFFFFF;
       border: none;
       border-radius: var(--radius-sm);
-      padding: 9px 14px;
+      padding: 10px 15px;
       font-family: inherit;
       font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
+      min-height: 42px;
     }
 
     .btn-primary:hover {
@@ -608,9 +880,10 @@
       font-family: inherit;
       font-size: 13px;
       font-weight: 600;
-      padding: 6px 12px;
+      padding: 7px 13px;
       border-radius: 999px;
       cursor: pointer;
+      min-height: 36px;
     }
 
     .filter-btn.active {
@@ -636,12 +909,12 @@
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .phase-title-wrap h3 {
       margin: 0;
-      font-size: 17px;
+      font-size: 16.5px;
       font-weight: 800;
       color: var(--ink);
     }
@@ -682,15 +955,15 @@
 
     .video-chips {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 8px;
     }
 
     .video-row {
       display: flex;
       align-items: flex-start;
-      gap: 9px;
-      padding: 8px 10px;
+      gap: 10px;
+      padding: 9px 11px;
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       background: var(--surface);
@@ -703,9 +976,9 @@
     }
 
     .video-row input[type="checkbox"] {
-      margin-top: 3px;
-      width: 15px;
-      height: 15px;
+      margin-top: 2px;
+      width: 17px;
+      height: 17px;
       accent-color: var(--ok-green);
       cursor: pointer;
       flex-shrink: 0;
@@ -761,8 +1034,8 @@
     }
 
     .challenge-check {
-      width: 19px;
-      height: 19px;
+      width: 20px;
+      height: 20px;
       margin-top: 2px;
       accent-color: var(--ok-green);
       cursor: pointer;
@@ -774,19 +1047,11 @@
       min-width: 0;
     }
 
-    .challenge-line {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      justify-content: space-between;
-    }
-
     .challenge-name-group {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
     }
 
     .challenge-num {
@@ -857,7 +1122,7 @@
       gap: 6px;
       font-size: 12.5px;
       font-weight: 600;
-      padding: 5px 10px;
+      padding: 6px 11px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--line);
       background: var(--surface);
@@ -886,7 +1151,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       background: var(--surface-soft);
-      padding: 8px 12px;
+      padding: 9px 12px;
     }
 
     details.study-details summary {
@@ -920,10 +1185,10 @@
 
     .note-input {
       width: 100%;
-      min-height: 58px;
+      min-height: 62px;
       resize: vertical;
       font-family: inherit;
-      font-size: 13px;
+      font-size: 14px;
       padding: 8px 10px;
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
@@ -935,18 +1200,18 @@
     .search-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 14px;
     }
 
     .search-input {
       flex: 1;
       min-width: 220px;
-      padding: 9px 12px;
+      padding: 10px 12px;
       border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       font-family: inherit;
-      font-size: 14px;
+      font-size: 15px;
       background: var(--surface);
       color: var(--ink);
     }
@@ -987,6 +1252,10 @@
       background: #FAFEFC;
     }
 
+    .video-cards-mobile {
+      display: none;
+    }
+
     .lang-tag {
       font-size: 11.5px;
       font-weight: 700;
@@ -1012,49 +1281,345 @@
       font-size: 14px;
     }
 
-    /* Responsivo */
+    /* =======================================================
+       VERSÃO MOBILE E TABLET (<= 960px) — FOCO EM ESTUDO TEÓRICO
+       ======================================================= */
     @media (max-width: 960px) {
       .shell {
-        grid-template-columns: 1fr;
+        display: block;
       }
 
+      /* Esconde a barra lateral pesada; vira gaveta ao tocar em Nuvem/Menu */
       .rail {
-        position: static;
-        height: auto;
+        display: none;
+      }
+
+      .rail.mobile-open {
+        display: flex;
+        position: fixed;
+        inset: 0 0 0 auto;
+        width: min(340px, 90vw);
+        height: 100dvh;
+        z-index: 60;
         border-right: none;
+        border-left: 1px solid var(--line);
+        box-shadow: -8px 0 28px rgba(19, 27, 38, 0.16);
+        padding: 20px 18px 28px;
+      }
+
+      .mobile-sync-backdrop.open {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(19, 27, 38, 0.42);
+        z-index: 50;
+      }
+
+      /* Cabeçalho compacto fixo no topo */
+      .mobile-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: var(--surface);
         border-bottom: 1px solid var(--line);
+        padding: 10px 16px;
+        padding-top: calc(10px + env(safe-area-inset-top));
+      }
+
+      .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .mobile-brand .brand-mark {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+
+      .mobile-brand-text {
+        min-width: 0;
+      }
+
+      .mobile-brand-title {
+        font-size: 14.5px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .mobile-brand-sub {
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+
+      .mobile-top-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .mobile-pct-pill {
+        font-size: 12.5px;
+        font-weight: 800;
+        color: var(--ts-blue);
+        background: var(--ts-blue-soft);
+        padding: 5px 10px;
+        border-radius: 999px;
+      }
+
+      .mobile-drawer-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--surface-soft);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        border-radius: 999px;
+        padding: 6px 11px;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 700;
+        cursor: pointer;
+        min-height: 36px;
       }
 
       .main {
-        padding: 24px 18px 56px;
+        padding: 18px 16px calc(86px + env(safe-area-inset-bottom));
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .hero {
+        padding-bottom: 18px;
+        margin-bottom: 20px;
+      }
+
+      .hero h1 {
+        font-size: 22px;
+      }
+
+      .hero p {
+        font-size: 14px;
       }
 
       .routine-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
       }
 
       .trap-grid {
         grid-template-columns: 1fr;
       }
+
+      .phase-header,
+      .phase-videos,
+      .challenge {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .theory-header {
+        padding: 14px;
+      }
+
+      .theory-details summary {
+        padding: 11px 14px;
+      }
+
+      .theory-body {
+        padding: 4px 14px 16px;
+      }
+
+      /* Evita auto-zoom no iOS Safari */
+      .sync-input,
+      .search-input,
+      .note-input {
+        font-size: 16px;
+      }
+
+      /* No mobile, vídeos viram cards tocáveis em vez de tabela */
+      .video-table-wrap {
+        display: none;
+      }
+
+      .video-cards-mobile {
+        display: grid;
+        gap: 10px;
+      }
+
+      .video-mobile-card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .video-mobile-card.watched {
+        background: #FAFEFC;
+        border-color: #B7E4CE;
+      }
+
+      .video-mobile-card input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+        accent-color: var(--ok-green);
+        flex-shrink: 0;
+      }
+
+      .video-mobile-body {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .video-mobile-title {
+        display: block;
+        font-size: 14.5px;
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.35;
+        margin-bottom: 6px;
+      }
+
+      .video-mobile-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* Sistema de abas no mobile: mostra 1 painel focado por vez */
+      .mobile-tab-panel {
+        display: none;
+      }
+
+      .mobile-tab-panel.active-mobile {
+        display: block;
+      }
+
+      /* Esconde o hero nas abas secundárias para ir direto ao ponto no celular */
+      body[data-mobile-tab="treino"] .hero,
+      body[data-mobile-tab="videos"] .hero,
+      body[data-mobile-tab="desafios"] .hero {
+        display: none;
+      }
+
+      /* Barra inferior fixa estilo app */
+      .mobile-bottomnav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 45;
+        background: var(--surface);
+        border-top: 1px solid var(--line);
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+        box-shadow: 0 -4px 16px rgba(19, 27, 38, 0.06);
+      }
+
+      .tab-btn {
+        background: transparent;
+        border: none;
+        font-family: inherit;
+        color: var(--muted);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 6px 4px;
+        min-height: 50px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-size: 11.5px;
+        font-weight: 700;
+      }
+
+      .tab-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .tab-btn.active {
+        color: var(--ts-blue);
+        background: var(--ts-blue-soft);
+      }
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 520px) {
       .routine-strip {
         grid-template-columns: 1fr;
+      }
+
+      .flashcard-stage {
+        padding: 18px 16px;
+        min-height: 170px;
+      }
+
+      .flashcard-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .flashcard-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
       }
     }
   </style>
 </head>
-<body>
+<body data-mobile-tab="teoria">
+  <!-- Barra superior mobile/tablet -->
+  <header class="mobile-topbar">
+    <div class="mobile-brand">
+      <div class="brand-mark">TS</div>
+      <div class="mobile-brand-text">
+        <div class="mobile-brand-title">Caderno TypeScript</div>
+        <div class="mobile-brand-sub" id="mobileSubLabel">Modo teórico de bolso</div>
+      </div>
+    </div>
+    <div class="mobile-top-actions">
+      <span class="mobile-pct-pill" id="mobilePct">0%</span>
+      <button class="mobile-drawer-btn" id="mobileSyncOpen" type="button" aria-label="Abrir progresso e sincronização">
+        <span class="sync-dot" id="mobileSyncDot"></span>
+        <span>Nuvem</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-sync-backdrop" id="mobileBackdrop"></div>
+
   <div class="shell">
-    <!-- Barra lateral de controle e progresso -->
-    <aside class="rail" aria-label="Índice do plano de estudos">
-      <div class="brand">
-        <div class="brand-mark">TS</div>
-        <div>
-          <div class="brand-title">Caderno TypeScript</div>
-          <div class="brand-sub">Plano prático de LeetCode</div>
+    <!-- Barra lateral (fixa no desktop, gaveta no mobile) -->
+    <aside class="rail" id="sideRail" aria-label="Índice e sincronização">
+      <div class="brand" style="justify-content: space-between;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="brand-mark">TS</div>
+          <div>
+            <div class="brand-title">Caderno TypeScript</div>
+            <div class="brand-sub">Plano prático e teórico</div>
+          </div>
         </div>
+        <button class="sync-btn secondary" id="mobileDrawerClose" type="button" style="display:none;">Fechar</button>
       </div>
 
       <div class="progress-box">
@@ -1067,12 +1632,16 @@
         </div>
         <div class="progress-stats">
           <div>
-            <strong id="challengesDone">0 / 13</strong>
-            Desafios feitos
+            <strong id="theoryDone">0/6</strong>
+            Teoria
           </div>
           <div>
-            <strong id="videosDone">0 / 33</strong>
-            Vídeos vistos
+            <strong id="challengesDone">0/13</strong>
+            Desafios
+          </div>
+          <div>
+            <strong id="videosDone">0/33</strong>
+            Vídeos
           </div>
         </div>
       </div>
@@ -1094,18 +1663,22 @@
       </div>
 
       <nav class="nav-group">
-        <div class="nav-heading">Fundação</div>
-        <a class="nav-link" href="#sintaxe">Colinha de sintaxe <span class="nav-count">6 pontos</span></a>
-        <a class="nav-link" href="#quiz">Treino rápido <span class="nav-count">6 itens</span></a>
+        <div class="nav-heading">Estudo teórico</div>
+        <a class="nav-link" href="#teoria" data-jump-tab="teoria">Guia teórico rápido <span class="nav-count" id="nav-teoria">0/6</span></a>
+        <a class="nav-link" href="#flashcards" data-jump-tab="teoria">Flashcards de bolso <span class="nav-count">12</span></a>
+
+        <div class="nav-heading">Memória muscular</div>
+        <a class="nav-link" href="#sintaxe" data-jump-tab="treino">Colinha de sintaxe <span class="nav-count">6 pontos</span></a>
+        <a class="nav-link" href="#quiz" data-jump-tab="treino">Quiz teórico e sintaxe <span class="nav-count">12 itens</span></a>
 
         <div class="nav-heading">Trilha de desafios</div>
-        <a class="nav-link" href="#fase-1">Fase 1: Base e revisão <span class="nav-count" id="nav-f1">0/4</span></a>
-        <a class="nav-link" href="#fase-2">Fase 2: Map, Set e Big O <span class="nav-count" id="nav-f2">0/3</span></a>
-        <a class="nav-link" href="#fase-3">Fase 3: Dois ponteiros <span class="nav-count" id="nav-f3">0/3</span></a>
-        <a class="nav-link" href="#fase-4">Fase 4: Pilha e listas <span class="nav-count" id="nav-f4">0/3</span></a>
+        <a class="nav-link" href="#fase-1" data-jump-tab="desafios">Fase 1: Base e revisão <span class="nav-count" id="nav-f1">0/4</span></a>
+        <a class="nav-link" href="#fase-2" data-jump-tab="desafios">Fase 2: Map, Set e Big O <span class="nav-count" id="nav-f2">0/3</span></a>
+        <a class="nav-link" href="#fase-3" data-jump-tab="desafios">Fase 3: Dois ponteiros <span class="nav-count" id="nav-f3">0/3</span></a>
+        <a class="nav-link" href="#fase-4" data-jump-tab="desafios">Fase 4: Pilha e listas <span class="nav-count" id="nav-f4">0/3</span></a>
 
         <div class="nav-heading">Biblioteca</div>
-        <a class="nav-link" href="#videos">Todos os vídeos <span class="nav-count">33</span></a>
+        <a class="nav-link" href="#videos" data-jump-tab="videos">Todos os vídeos <span class="nav-count">33</span></a>
       </nav>
 
       <div class="rail-footer">
@@ -1117,46 +1690,80 @@
     <!-- Conteúdo principal -->
     <main class="main">
       <header class="hero">
-        <h1>Retomada de código em TypeScript e LeetCode</h1>
+        <h1>Retomada em TypeScript e Algoritmos</h1>
         <p>
-          Material montado em cima dos pontos exatos que apareceram na sessão de hoje:
-          destravar a memória muscular da sintaxe, separar índice de valor, dominar
-          <code>Record</code> e <code>Map</code> e subir de nível nos padrões que mais caem em entrevistas.
-          Todo progresso e anotação fica salvo automaticamente no navegador.
+          No <strong>celular ou tablet</strong>, use as abas de baixo para focar em teoria rápida,
+          flashcards, quiz e vídeos. No <strong>PC</strong>, abra os desafios do LeetCode e pratique
+          digitando na mão. Tudo sincroniza pela sua chave na nuvem.
         </p>
 
-        <div class="routine-strip" aria-label="Rotina diária recomendada de 45 minutos">
+        <div class="routine-strip" aria-label="Rotina diária recomendada">
           <div class="routine-step">
-            <div class="routine-time">10 min</div>
-            <div class="routine-name">Aquecimento</div>
-            <div class="routine-desc">Releia a colinha ou refaça o mini-quiz sem olhar o código pronto.</div>
+            <div class="routine-time">No celular (10 min)</div>
+            <div class="routine-name">Teoria e flashcards</div>
+            <div class="routine-desc">Leia 1 lição teórica e gire 5 flashcards para fixar o padrão mental.</div>
           </div>
           <div class="routine-step">
-            <div class="routine-time">20 min</div>
-            <div class="routine-name">Tentar na mão</div>
-            <div class="routine-desc">Faça um teste de mesa no papel antes de abrir o editor do LeetCode.</div>
+            <div class="routine-time">No celular (10 min)</div>
+            <div class="routine-name">Quiz e vídeos</div>
+            <div class="routine-desc">Faça o quiz sem pressa e assista ao vídeo da fase antes de sentar no PC.</div>
           </div>
           <div class="routine-step">
-            <div class="routine-time">10 min</div>
-            <div class="routine-name">Assistir se travar</div>
-            <div class="routine-desc">Travou por mais de 15 min? Assista ao vídeo da fase e feche antes de codar.</div>
+            <div class="routine-time">No PC (20 min)</div>
+            <div class="routine-name">Código na mão</div>
+            <div class="routine-desc">Teste de mesa no papel primeiro, depois digite no LeetCode sem colar.</div>
           </div>
           <div class="routine-step">
-            <div class="routine-time">5 min</div>
-            <div class="routine-name">Registrar o erro</div>
-            <div class="routine-desc">Escreva na caixa de notas do desafio o que te travou para não repetir.</div>
+            <div class="routine-time">Fechamento (5 min)</div>
+            <div class="routine-name">Anotar o travamento</div>
+            <div class="routine-desc">Escreva o que te segurou e revise o mesmo problema 48 horas depois.</div>
           </div>
         </div>
       </header>
 
-      <!-- Seção 1: Colinha dos erros de hoje -->
-      <section class="section" id="sintaxe">
+      <!-- PAINEL 1 (MOBILE: TEORIA) — Guia Teórico + Flashcards -->
+      <section class="section mobile-tab-panel active-mobile" id="teoria" data-tab-panel="teoria">
         <div class="section-head">
-          <h2>Colinha de sintaxe: os 6 pontos de atenção de hoje</h2>
+          <h2>Guia teórico rápido (leitura de 3 min)</h2>
         </div>
         <p class="section-desc">
-          Antes de abrir o LeetCode, passe o olho nesses 6 contrastes. Eliminar esses erros pequenos
-          libera sua cabeça para pensar só na lógica do algoritmo.
+          Feito para ler no celular ou tablet sem precisar digitar código. Marque cada lição como lida
+          conforme o conceito ficar claro na sua cabeça.
+        </p>
+
+        <div class="theory-list" id="theoryContainer"></div>
+
+        <!-- Flashcards de bolso -->
+        <div class="flashcard-panel" id="flashcards">
+          <div class="flashcard-top">
+            <h3>Flashcards de bolso</h3>
+            <span class="quiz-score" id="fcCounter">Cartão 1 de 12</span>
+          </div>
+
+          <button class="flashcard-stage" id="fcStage" type="button" aria-live="polite">
+            <span class="flashcard-tag" id="fcTag">Pergunta</span>
+            <div class="flashcard-text" id="fcText"></div>
+            <span class="flashcard-hint" id="fcHint">Toque no cartão para ver a resposta</span>
+          </button>
+
+          <div class="flashcard-controls">
+            <div class="flashcard-nav">
+              <button class="btn-ghost" id="fcPrev" type="button" style="text-align:center;">Anterior</button>
+              <button class="btn-primary" id="fcNext" type="button">Próximo cartão</button>
+            </div>
+            <button class="btn-ghost" id="fcShuffle" type="button" style="text-align:center;">Embaralhar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAINEL 2 (MOBILE: TREINO) — Colinha de Sintaxe + Quiz -->
+      <section class="section mobile-tab-panel" id="sintaxe" data-tab-panel="treino">
+        <div class="section-head">
+          <h2>Colinha de sintaxe: os 6 pontos de atenção</h2>
+        </div>
+        <p class="section-desc">
+          Revise esses 6 contrastes antes de codar. Eliminar erros pequenos de sintaxe libera sua
+          cabeça para focar só na lógica do problema.
         </p>
 
         <div class="trap-grid">
@@ -1225,31 +1832,31 @@ const visto = new Map&lt;number, number&gt;();</div>
           </article>
         </div>
 
-        <!-- Mini-quiz interativo -->
+        <!-- Quiz ampliado (Sintaxe + Teoria) -->
         <div class="quiz-box" id="quiz">
           <div class="quiz-top">
-            <h3>Treino rápido de sintaxe (encontre o erro antes de codar)</h3>
-            <span class="quiz-score" id="quizScore">Pergunta 1 de 6</span>
+            <h3>Quiz rápido: sintaxe e teoria de entrevistas</h3>
+            <span class="quiz-score" id="quizScore">Pergunta 1 de 12</span>
           </div>
-          <div id="quizQuestion"></div>
+          <div id="quizQuestion" style="font-weight:600; font-size:15px;"></div>
           <pre class="quiz-code" id="quizCode"></pre>
           <div class="quiz-options" id="quizOptions"></div>
           <div class="quiz-feedback" id="quizFeedback"></div>
           <div class="quiz-actions">
             <button class="btn-primary" id="quizNext" type="button" style="display:none;">Próxima pergunta</button>
-            <button class="btn-ghost" id="quizRestart" type="button" style="display:none;">Refazer treino</button>
+            <button class="btn-ghost" id="quizRestart" type="button" style="display:none;">Refazer quiz</button>
           </div>
         </div>
       </section>
 
-      <!-- Seção 2: Trilha em 4 Fases -->
-      <section class="section" id="trilha">
+      <!-- PAINEL 3 (MOBILE: DESAFIOS) — Trilha em 4 Fases -->
+      <section class="section mobile-tab-panel" id="trilha" data-tab-panel="desafios">
         <div class="section-head">
-          <h2>Trilha guiada em 4 fases</h2>
+          <h2>Trilha prática em 4 fases (13 desafios)</h2>
         </div>
         <p class="section-desc">
-          Siga na ordem das fases. Conecte sua chave em <strong>Sincronizar aparelhos</strong> para carregar
-          seu progresso salvo na nuvem — a meta da Fase 1 é refazer os 4 problemas do zero em 48 horas sem ajuda.
+          Siga na ordem das fases. No celular você pode revisar as dicas e anotações; no PC, abra o link
+          do LeetCode e digite a solução do zero.
         </p>
 
         <div class="filter-bar" role="group" aria-label="Filtrar desafios">
@@ -1261,21 +1868,21 @@ const visto = new Map&lt;number, number&gt;();</div>
         <div id="phasesContainer"></div>
       </section>
 
-      <!-- Seção 3: Biblioteca Indexada de Vídeos -->
-      <section class="section" id="videos">
+      <!-- PAINEL 4 (MOBILE: VÍDEOS) — Biblioteca Indexada -->
+      <section class="section mobile-tab-panel" id="videos" data-tab-panel="videos">
         <div class="section-head">
           <h2>Biblioteca indexada de vídeos</h2>
         </div>
         <p class="section-desc">
-          Todos os 33 links abaixo foram verificados no YouTube. Use a busca para encontrar rápido
-          um tema (ex: <em>loops</em>, <em>Map</em>, <em>Big O</em>, <em>Two Sum</em>) e marque conforme assistir.
+          Todos os 33 links abaixo foram verificados no YouTube. Ótimo para estudar no celular ou tablet
+          e marcar como assistido.
         </p>
 
         <div class="search-row">
-          <input class="search-input" id="videoSearch" type="search" placeholder="Buscar por título, canal ou tema (ex: TypeScript, Map, Augusto Galego, NeetCode)..." aria-label="Buscar vídeos" />
+          <input class="search-input" id="videoSearch" type="search" placeholder="Buscar tema ou canal (ex: Big O, Map, Augusto Galego)..." aria-label="Buscar vídeos" />
           <button class="filter-btn active" data-vcat="all" type="button">Todos</button>
           <button class="filter-btn" data-vcat="PT-BR" type="button">Só PT-BR</button>
-          <button class="filter-btn" data-vcat="EN" type="button">Só NeetCode (EN)</button>
+          <button class="filter-btn" data-vcat="EN" type="button">NeetCode (EN)</button>
         </div>
 
         <div class="video-table-wrap">
@@ -1291,16 +1898,183 @@ const visto = new Map&lt;number, number&gt;();</div>
             </thead>
             <tbody id="videoTableBody"></tbody>
           </table>
-          <div class="empty-msg" id="videoEmpty" style="display:none;">Nenhum vídeo encontrado com esse filtro.</div>
+          <div class="empty-msg" id="videoEmptyDesktop" style="display:none;">Nenhum vídeo encontrado com esse filtro.</div>
         </div>
+
+        <div class="video-cards-mobile" id="videoCardsMobile"></div>
+        <div class="empty-msg" id="videoEmptyMobile" style="display:none;">Nenhum vídeo encontrado com esse filtro.</div>
       </section>
     </main>
   </div>
+
+  <!-- Barra de navegação inferior para mobile/tablet -->
+  <nav class="mobile-bottomnav" aria-label="Navegação mobile">
+    <button class="tab-btn active" data-mobile-nav="teoria" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>Teoria</span>
+    </button>
+    <button class="tab-btn" data-mobile-nav="treino" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span>Quiz</span>
+    </button>
+    <button class="tab-btn" data-mobile-nav="videos" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span>Vídeos</span>
+    </button>
+    <button class="tab-btn" data-mobile-nav="desafios" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span>Desafios</span>
+    </button>
+  </nav>
 
   <script>
     const STORAGE_KEY = 'ts_leetcode_study_v1';
     const SYNC_KEY_STORAGE = 'ts_leetcode_sync_key_v1';
     const SYNC_API = '/api/progress';
+
+    const THEORY_LESSONS = [
+      {
+        id: 't_ts_base',
+        badge: 'Base 1',
+        time: '3 min',
+        title: 'Tipos, variáveis e fluxo em TypeScript',
+        summary: 'Como o TypeScript enxerga number, string, array e por que return encerra a função na hora.',
+        html: `
+          <p>Em TypeScript, toda variável tem um <strong>nome</strong> e um <strong>tipo</strong>. O tipo diz quais operações são permitidas naquele dado — se você tentar chamar um método de texto em um número, o compilador te avisa antes mesmo de rodar.</p>
+          <ul class="theory-bullets">
+            <li><code>const</code> para valores que não mudam de referência; <code>let</code> para contadores e acumuladores (<code>i</code>, <code>total</code>, <code>prefix</code>).</li>
+            <li><code>number</code> não tem <code>.split()</code> nem <code>.length</code> — converta primeiro com <code>x.toString()</code>.</li>
+            <li><code>=</code> atribui valor; <code>===</code> e <code>!==</code> comparam valor e tipo.</li>
+            <li><code>return</code> sai da função imediatamente. Se ficar dentro de um <code>for</code> sem um <code>if</code>, o loop só roda 1 vez.</li>
+          </ul>
+          <pre class="theory-code">// Nome do parâmetro é x; number é só o tipo dele
+function dobrar(x: number): number {
+  const resultado = x * 2;
+  return resultado;
+}</pre>
+          <div class="theory-rule"><strong>Regra mental:</strong> antes de chamar um método (<code>.split</code>, <code>.length</code>, <code>.push</code>), pergunte: "qual é o tipo dessa variável agora?"</div>
+        `
+      },
+      {
+        id: 't_arrays_loops',
+        badge: 'Base 2',
+        time: '3 min',
+        title: 'Arrays, índices vs. valores e loops aninhados',
+        summary: 'Entenda de vez a diferença entre i e nums[i], e o papel de cada loop em problemas 2D.',
+        html: `
+          <p>Todo array (e toda string) é uma fileira de caixas numeradas a partir do zero. Confundir o <strong>número da caixa</strong> com o <strong>que está dentro dela</strong> é o erro mais comum em entrevistas.</p>
+          <pre class="theory-code">Índice (i):   0     1     2     3
+nums:       [ 2 ] [ 7 ] [ 11 ] [ 15 ]
+              ^
+           nums[0] vale 2   (i vale 0)</pre>
+          <ul class="theory-bullets">
+            <li><strong>Último índice válido:</strong> sempre <code>nums.length - 1</code>. Por isso o loop usa <code>i &lt; nums.length</code> (menor, nunca menor-ou-igual).</li>
+            <li><strong>Pares sem repetir (Two Sum):</strong> o segundo loop começa em <code>j = i + 1</code> para nunca somar um elemento com ele mesmo.</li>
+            <li><strong>Linhas e colunas (Longest Common Prefix):</strong> em <code>strs[j][i]</code>, <code>j</code> escolhe a palavra e <code>i</code> escolhe a letra dentro dela.</li>
+          </ul>
+          <div class="theory-rule"><strong>Teste de mesa em 10 segundos:</strong> antes de codar, escreva <code>i = 0, nums[i] = ...</code> no papel. Isso corta 80% dos bugs de loop.</div>
+        `
+      },
+      {
+        id: 't_bigo',
+        badge: 'Entrevistas',
+        time: '4 min',
+        title: 'Notação Big O sem matemática pesada',
+        summary: 'Como estimar se sua solução vai passar no limite de tempo ou estourar com entradas grandes.',
+        html: `
+          <p><strong>Big O</strong> mede como o número de operações cresce quando a entrada <code>n</code> fica enorme (ex: 10.000 ou 100.000 itens). Em entrevistas, quase sempre perguntam: "qual a complexidade de tempo e espaço?"</p>
+          <table class="bigo-table">
+            <thead>
+              <tr><th>Big O</th><th>Nome</th><th>Se n = 10.000</th><th>Exemplo típico</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>O(1)</code></td><td>Constante</td><td>1 passo</td><td><code>nums[0]</code>, <code>map.get(k)</code></td></tr>
+              <tr><td><code>O(log n)</code></td><td>Logarítmica</td><td>~14 passos</td><td>Busca Binária (corta pela metade)</td></tr>
+              <tr><td><code>O(n)</code></td><td>Linear</td><td>10.000 passos</td><td>1 <code>for</code> percorrendo o array</td></tr>
+              <tr><td><code>O(n log n)</code></td><td>Linearítmica</td><td>~130.000 passos</td><td>Ordenar array (<code>.sort()</code>)</td></tr>
+              <tr><td><code>O(n²)</code></td><td>Quadrática</td><td>100.000.000 passos</td><td>2 <code>for</code> aninhados (Two Sum bruto)</td></tr>
+            </tbody>
+          </table>
+          <div class="theory-rule"><strong>Atalho prático:</strong> viu dois <code>for</code> um dentro do outro no mesmo array? Provavelmente é <code>O(n²)</code> — e o entrevistador vai perguntar se dá para baixar para <code>O(n)</code> usando um <code>Map</code> ou <code>Set</code>!</div>
+        `
+      },
+      {
+        id: 't_hashmap_set',
+        badge: 'Padrão #1',
+        time: '4 min',
+        title: 'Record, Map e Set: o superpoder O(1)',
+        summary: 'Como trocar memória por velocidade e resolver Two Sum, Contains Duplicate e Valid Anagram em 1 loop.',
+        html: `
+          <p>Quando você busca um item num array com <code>.includes()</code> ou outro <code>for</code>, o computador olha item por item (<code>O(n)</code>). Com um <strong>Hash Map</strong> ou <strong>Set</strong>, a consulta é direta: <code>O(1)</code>.</p>
+          <ul class="theory-bullets">
+            <li><strong><code>Record&lt;string, number&gt;</code></strong> (objeto <code>{}</code>): ótimo para tabelas fixas com chaves de texto (ex: Roman to Integer).</li>
+            <li><strong><code>new Map&lt;K, V&gt;()</code></strong>: guarda pares chave → valor de qualquer tipo (inclusive <code>number</code>). Métodos: <code>.set(k, v)</code>, <code>.get(k)</code>, <code>.has(k)</code>.</li>
+            <li><strong><code>new Set&lt;T&gt;()</code></strong>: guarda só valores únicos (sem duplicatas). Métodos: <code>.add(x)</code>, <code>.has(x)</code>.</li>
+          </ul>
+          <pre class="theory-code">// Ideia do Two Sum em O(n) com Map:
+// nums = [2, 7, 11, 15], target = 9
+// i=0 (val=2): falta 9-2 = 7. Está no Map? Não → guarda { 2 → 0 }
+// i=1 (val=7): falta 9-7 = 2. Está no Map? SIM! Índice 0 → return [0, 1]</pre>
+          <div class="theory-rule"><strong>Quando reconhecer:</strong> o enunciado pergunta "já apareceu antes?", "conte a frequência" ou "ache o complemento"? Pense imediatamente em <code>Set</code> ou <code>Map</code>.</div>
+        `
+      },
+      {
+        id: 't_two_pointers',
+        badge: 'Padrão #2',
+        time: '4 min',
+        title: 'Dois Ponteiros, Janela Deslizante e Busca Binária',
+        summary: 'Como usar left e right para evitar loops extras em strings, arrays ordenados e subarrays.',
+        html: `
+          <p>Em vez de testar todas as combinações possíveis, você mantém dois índices (<code>left</code> e <code>right</code>) que se movem com uma regra clara:</p>
+          <ul class="theory-bullets">
+            <li><strong>Pontas opostas (Two Pointers):</strong> <code>left = 0</code> e <code>right = len - 1</code> caminhando para o centro. Clássico de <em>Valid Palindrome</em> e arrays ordenados.</li>
+            <li><strong>Janela Deslizante (Sliding Window):</strong> os dois ponteiros andam para a direita mantendo um trecho válido (ou um melhor mínimo, como em <em>Buy and Sell Stock</em>).</li>
+            <li><strong>Busca Binária:</strong> se o array está <strong>ordenado</strong>, olhe o meio <code>mid = Math.floor((left + right) / 2)</code> e descarte metade do array a cada passo (<code>O(log n)</code>).</li>
+          </ul>
+          <pre class="theory-code">Palíndromo ("radar"):
+  [ r ] [ a ] [ d ] [ a ] [ r ]
+    ^                       ^
+   left →               ← right</pre>
+          <div class="theory-rule"><strong>Pegadinha de JS/TS:</strong> na Busca Binária, sempre use <code>Math.floor((left + right) / 2)</code> porque <code>5 / 2</code> em JS dá <code>2.5</code>.</div>
+        `
+      },
+      {
+        id: 't_stack_list',
+        badge: 'Padrão #3',
+        time: '4 min',
+        title: 'Pilha (Stack) e Listas Ligadas (Linked List)',
+        summary: 'O princípio LIFO para parênteses válidos e como manipular ponteiros .next sem perder a lista.',
+        html: `
+          <p>Duas estruturas clássicas que quase sempre fecham entrevistas júnior e pleno:</p>
+          <ul class="theory-bullets">
+            <li><strong>Pilha (Stack — LIFO: último a entrar, primeiro a sair):</strong> em TypeScript é só um array usando <code>.push()</code> (empilhar) e <code>.pop()</code> (desempilhar). Perfeita para <em>Valid Parentheses</em>: o último parêntese aberto precisa ser o primeiro a fechar.</li>
+            <li><strong>Lista Ligada (Linked List):</strong> cada elemento é um nó <code>{ val, next }</code> apontando para o próximo (ou <code>null</code> no fim). Não existe acesso por índice <code>list[2]</code> — você caminha fazendo <code>current = current.next</code>.</li>
+          </ul>
+          <pre class="theory-code">// Inversão de lista ligada (3 ponteiros):
+// Antes:  null   1 -> 2 -> 3
+//         prev  curr next
+// Passo:  salva next = curr.next
+//         vira  curr.next = prev
+//         anda  prev = curr; curr = next</pre>
+          <div class="theory-rule"><strong>Regra de ouro em Linked List:</strong> nunca sobrescreva <code>current.next</code> antes de guardar o próximo nó em uma variável <code>next</code>!</div>
+        `
+      }
+    ];
+
+    const FLASHCARDS = [
+      { tag: 'Sintaxe TS', q: 'Qual a diferença entre = e === em TypeScript?', a: 'Um único = é atribuição (guarda um valor na variável). Três === comparam se dois valores são estritamente iguais (valor e tipo).' },
+      { tag: 'Arrays', q: 'Em nums = [2, 7, 11], qual a diferença entre i e nums[i] quando i = 1?', a: 'i vale 1 (a posição/índice). nums[i] vale 7 (o valor guardado naquela posição).' },
+      { tag: 'Tipos', q: 'Por que x.split("") falha quando x é number?', a: 'Porque .split() é um método exclusivo de string. Primeiro é preciso converter com const str = x.toString().' },
+      { tag: 'Loops', q: 'Por que no Two Sum força bruta o segundo loop começa em j = i + 1?', a: 'Para nunca somar um elemento com ele mesmo (i === j) e evitar testar pares repetidos que já foram checados.' },
+      { tag: 'Fluxo', q: 'O que acontece se você colocar return total dentro de um for sem if?', a: 'A função encerra imediatamente na primeira volta (i = 0) e nunca percorre o restante do array ou string.' },
+      { tag: 'Big O', q: 'Qual é o Big O de dois loops for aninhados sobre o mesmo array de tamanho n?', a: 'O(n²) — tempo quadrático. Se n = 10.000, são até 100 milhões de operações.' },
+      { tag: 'Estruturas', q: 'Qual a diferença prática entre Set e Map em TypeScript?', a: 'Set guarda apenas valores únicos (.add, .has). Map guarda pares chave → valor (.set, .get, .has). Ambos têm busca média O(1).' },
+      { tag: 'Padrões', q: 'Como o Hash Map reduz o Two Sum de O(n²) para O(n)?', a: 'Em 1 única passada, calculamos falta = target - nums[i] e checamos em O(1) se "falta" já foi salvo no Map antes.' },
+      { tag: 'TypeScript', q: 'Para que serve o tipo Record<string, number>?', a: 'Define um objeto cujas chaves são string e os valores são number, permitindo acessar valores[s[i]] sem erro de tipagem.' },
+      { tag: 'Busca Binária', q: 'Qual condição obrigatória o array precisa ter para usar Binary Search (O(log n))?', a: 'O array precisa estar ordenado. E o meio em JS/TS deve usar Math.floor((left + right) / 2).' },
+      { tag: 'Stack', q: 'Por que uma Pilha (Stack) resolve Valid Parentheses?', a: 'Porque segue LIFO (último que abriu precisa ser o primeiro que fecha). Ao ver "(", "[" ou "{", damos push; ao ver fechamento, damos pop e conferimos.' },
+      { tag: 'Linked List', q: 'Ao inverter uma Linked List, qual linha precisa vir PRIMEIRO dentro do while?', a: 'const next = current.next — salvar o próximo nó antes de redirecionar current.next = prev, senão o resto da lista se perde.' }
+    ];
 
     const VIDEOS = [
       // Fase 1 - TypeScript & JS Base
@@ -1353,7 +2127,7 @@ const visto = new Map&lt;number, number&gt;();</div>
       {
         id: 1,
         anchor: 'fase-1',
-        title: 'Fase 1: Base de TypeScript, loops e revisão dos 4 de hoje',
+        title: 'Fase 1: Base de TypeScript, loops e revisão dos 4 iniciais',
         subtitle: 'Dias 1 a 3 — Foco em digitar limpo sem errar for, length, índices e tipos básicos.',
         videoIds: ['v_ts_manual', 'v_ts_battisti', 'v_js_loops', 'v_js_rep', 'v_js_array', 'v_js_obj'],
         challenges: [
@@ -1363,8 +2137,7 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Two Sum (força bruta)',
             leetcode: 'https://leetcode.com/problems/two-sum/',
             pattern: 'Loops aninhados',
-            doneByDefault: true,
-            todayTag: 'Feito hoje — refazer em 48h',
+            todayTag: 'Revisar em 48h',
             goal: 'Reescrever de cabeça os dois loops com j = i + 1, somando nums[i] + nums[j] e devolvendo [i, j].',
             hint: 'Para cada elemento i, teste apenas os elementos à frente (j = i + 1) para não somar o número com ele mesmo.',
             trap: 'Não confunda i + j (índices) com nums[i] + nums[j] (valores), e use colchetes [i, j] no return.',
@@ -1376,8 +2149,7 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Palindrome Number',
             leetcode: 'https://leetcode.com/problems/palindrome-number/',
             pattern: 'Strings e conversão',
-            doneByDefault: true,
-            todayTag: 'Feito hoje — refazer em 48h',
+            todayTag: 'Revisar em 48h',
             goal: 'Converter x para string com x.toString(), inverter com split/reverse/join e comparar str === reverse.',
             hint: 'Transforme o número em string uma única vez em const str = x.toString() e use str nos dois passos.',
             trap: 'Número não tem .split() e não compare string com number no return.',
@@ -1389,8 +2161,7 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Roman to Integer',
             leetcode: 'https://leetcode.com/problems/roman-to-integer/',
             pattern: 'Record / Tabela',
-            doneByDefault: true,
-            todayTag: 'Feito hoje — refazer em 48h',
+            todayTag: 'Revisar em 48h',
             goal: 'Montar o objeto Record<string, number>, comparar atual < proximo e deixar o return total fora do for.',
             hint: 'Se a letra atual vale menos que a próxima (ex: I antes de V), subtraia do total; senão, some.',
             trap: 'Use vírgulas dentro do objeto { I: 1, V: 5 } e nunca coloque return total dentro do for.',
@@ -1402,8 +2173,7 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Longest Common Prefix',
             leetcode: 'https://leetcode.com/problems/longest-common-prefix/',
             pattern: 'Matriz / Colunas',
-            doneByDefault: true,
-            todayTag: 'Feito hoje — refazer em 48h',
+            todayTag: 'Revisar em 48h',
             goal: 'Percorrer coluna i da primeira palavra e checar todas as outras palavras j = 1..n antes de somar no prefix.',
             hint: 'Só adicione letter ao prefix depois que o loop interno terminar sem nenhuma palavra diferente.',
             trap: 'i vai até strs[0].length (letras); j vai até strs.length (palavras). E return não tem sinal de =.',
@@ -1424,7 +2194,6 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Contains Duplicate',
             leetcode: 'https://leetcode.com/problems/contains-duplicate/',
             pattern: 'Set',
-            doneByDefault: false,
             goal: 'Usar new Set<number>() para verificar em O(1) se um número já apareceu antes enquanto percorre o array.',
             hint: 'Crie const vistos = new Set<number>(). Para cada num: se vistos.has(num), retorne true; senão, vistos.add(num).',
             trap: 'No Set os métodos são .has() e .add() (não .includes() nem .push()).',
@@ -1436,10 +2205,9 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Valid Anagram',
             leetcode: 'https://leetcode.com/problems/valid-anagram/',
             pattern: 'Hash Map / Frequência',
-            doneByDefault: false,
             goal: 'Contar quantas vezes cada letra aparece em s usando Record<string, number> ou Map e descontar ao percorrer t.',
             hint: 'Primeiro cheque se s.length !== t.length (se forem diferentes, já retorna false!).',
-            trap: 'Ao contar em um Record, lembre de inicializar se ainda não existir: contagem[ch] = (contagem[ch] ?? 0) + 1.',
+            trap: 'Ao contar em um Record, inicialize se ainda não existir: contagem[ch] = (contagem[ch] ?? 0) + 1.',
             videos: ['v_nc_anagram', 'v_hashmap5']
           },
           {
@@ -1448,7 +2216,6 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Two Sum em O(n) com Map',
             leetcode: 'https://leetcode.com/problems/two-sum/',
             pattern: 'Hash Map',
-            doneByDefault: false,
             goal: 'Refazer o Two Sum usando apenas UM for e um new Map<number, number>() guardando valor → índice.',
             hint: 'Para cada nums[i], calcule falta = target - nums[i]. Pergunte ao Map se "falta" já foi visto antes!',
             trap: 'No TypeScript, map.get(falta) retorna number | undefined. Use if (map.has(falta)) return [map.get(falta)!, i].',
@@ -1469,7 +2236,6 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Valid Palindrome',
             leetcode: 'https://leetcode.com/problems/valid-palindrome/',
             pattern: 'Two Pointers',
-            doneByDefault: false,
             goal: 'Limpar a string (minúsculas + alfanumérico) e comparar as pontas com left = 0 e right = clean.length - 1.',
             hint: 'Use while (left < right): se clean[left] !== clean[right] retorna false; senão, left++ e right--.',
             trap: 'Cuidado com o último índice válido: é length - 1, nunca length.',
@@ -1481,7 +2247,6 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Best Time to Buy and Sell Stock',
             leetcode: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/',
             pattern: 'Sliding Window',
-            doneByDefault: false,
             goal: 'Manter o menor preço visto até agora (minPrice) e calcular o maior lucro possível em uma única passagem.',
             hint: 'Se o preço de hoje for menor que minPrice, atualize minPrice. Senão, compare (preco - minPrice) com maxProfit.',
             trap: 'Você só pode vender depois de comprar — por isso atualizamos minPrice andando da esquerda para a direita.',
@@ -1493,7 +2258,6 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Binary Search',
             leetcode: 'https://leetcode.com/problems/binary-search/',
             pattern: 'Binary Search',
-            doneByDefault: false,
             goal: 'Encontrar target em array ordenado cortando o espaço de busca pela metade a cada passo em O(log n).',
             hint: 'Calcule mid = Math.floor((left + right) / 2). Se nums[mid] < target, suba left = mid + 1; se maior, desça right = mid - 1.',
             trap: 'Em JavaScript/TypeScript, divisão de inteiros gera decimal (ex: 5 / 2 = 2.5). Sempre envolva com Math.floor().',
@@ -1514,7 +2278,6 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Valid Parentheses',
             leetcode: 'https://leetcode.com/problems/valid-parentheses/',
             pattern: 'Stack (Pilha)',
-            doneByDefault: false,
             goal: 'Usar um array como pilha (.push e .pop) junto com um Record ligando fechamento → abertura.',
             hint: 'Quando vir "(", "[" ou "{", dê push na pilha. Quando vir fechamento, dê pop e cheque se bate com o par esperado.',
             trap: 'No final, só é válido se a pilha estiver completamente vazia: return stack.length === 0.',
@@ -1526,7 +2289,6 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Merge Two Sorted Lists',
             leetcode: 'https://leetcode.com/problems/merge-two-sorted-lists/',
             pattern: 'Linked List',
-            doneByDefault: false,
             goal: 'Unir duas listas ligadas ordenadas usando um nó fictício (dummy = new ListNode(0)) e um ponteiro tail.',
             hint: 'Enquanto list1 e list2 não forem null, ligue tail.next no menor dos dois e avance aquele ponteiro.',
             trap: 'Quando o while terminar, ainda pode sobrar o resto de list1 ou list2 — faça tail.next = list1 ?? list2.',
@@ -1538,7 +2300,6 @@ const visto = new Map&lt;number, number&gt;();</div>
             title: 'Reverse Linked List',
             leetcode: 'https://leetcode.com/problems/reverse-linked-list/',
             pattern: 'Linked List',
-            doneByDefault: false,
             goal: 'Inverter uma lista ligada mantendo 3 referências: prev (null), current (head) e next.',
             hint: 'Em cada passo: salve next = current.next, aponte current.next = prev, avance prev = current e current = next.',
             trap: 'Se você mudar current.next antes de salvar em next, perde o resto da lista!',
@@ -1614,6 +2375,72 @@ const visto = new Map&lt;number, number&gt;();</div>
         ],
         answer: 0,
         explain: 'strs é um array de 3 palavras; strs[0] é a string "flower" de 6 letras.'
+      },
+      {
+        q: '[Teoria] Qual estrutura é mais indicada para checar em O(1) se um número já apareceu (Contains Duplicate)?',
+        code: `// nums pode ter até 100.000 números`,
+        options: [
+          'Um Set<number> usando .has() e .add().',
+          'Outro loop for dentro do primeiro.',
+          'Converter o array inteiro para string com .join().'
+        ],
+        answer: 0,
+        explain: 'O Set tem consulta média O(1), reduzindo o algoritmo inteiro para O(n) em vez de O(n²).'
+      },
+      {
+        q: '[Teoria] Qual é a complexidade de tempo da Busca Binária (Binary Search)?',
+        code: `// Array ordenado de 1.000.000 de números`,
+        options: [
+          'O(n²)',
+          'O(n)',
+          'O(log n) — corta o espaço de busca pela metade a cada passo.'
+        ],
+        answer: 2,
+        explain: 'Com 1 milhão de itens, a Busca Binária encontra o alvo em no máximo ~20 comparações!'
+      },
+      {
+        q: '[Teoria] No Two Sum otimizado com Map, o que guardamos dentro do Map?',
+        code: `const mapa = new Map<number, number>();\n// O que vai em mapa.set(???, ???)`,
+        options: [
+          'O valor do número como chave e o índice i como valor: mapa.set(nums[i], i).',
+          'Apenas o target.',
+          'Dois números somados.'
+        ],
+        answer: 0,
+        explain: 'Guardando valor → índice, conseguimos perguntar mapa.has(target - nums[i]) e recuperar o índice original em O(1).'
+      },
+      {
+        q: '[Teoria] Em Valid Parentheses, o que devemos conferir no FINAL depois que o loop termina?',
+        code: `// Exemplo problemático: s = "((("`,
+        options: [
+          'Se a pilha tem pelo menos 1 item.',
+          'Se a pilha está vazia: return stack.length === 0.',
+          'Sempre retornar true se o loop não deu erro.'
+        ],
+        answer: 1,
+        explain: 'Se sobrarem parênteses abertos na pilha (como em "((("), significa que não foram fechados → deve retornar false.'
+      },
+      {
+        q: '[Teoria] Por que usamos Math.floor((left + right) / 2) na Busca Binária em TypeScript?',
+        code: `const left = 0, right = 5;\nconst mid = (left + right) / 2; // vale 2.5!`,
+        options: [
+          'Porque em JS/TS toda divisão de number pode gerar número decimal, e índice de array precisa ser inteiro.',
+          'Porque Math.floor ordena o array.',
+          'Não precisa, nums[2.5] funciona normalmente.'
+        ],
+        answer: 0,
+        explain: 'Em JS/TS não existe tipo int separado — 5 / 2 retorna 2.5, e nums[2.5] vira undefined.'
+      },
+      {
+        q: '[Teoria] Ao inverter uma Linked List, por que salvamos const next = current.next antes de mudar current.next = prev?',
+        code: `const next = current.next;\ncurrent.next = prev;\nprev = current;\ncurrent = next;`,
+        options: [
+          'Só para o código ficar mais bonito.',
+          'Porque ao apontar current.next para trás (prev), perdemos a referência para o resto da lista se não salvarmos antes.',
+          'Para duplicar a lista na memória.'
+        ],
+        answer: 1,
+        explain: 'Sem salvar o próximo nó em next antes, você corta a ponte e não consegue avançar o ponteiro current.'
       }
     ];
 
@@ -1621,9 +2448,17 @@ const visto = new Map&lt;number, number&gt;();</div>
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) return JSON.parse(raw);
+        if (raw) {
+          const p = JSON.parse(raw);
+          return {
+            challenges: p.challenges || {},
+            videos: p.videos || {},
+            theory: p.theory || {},
+            notes: p.notes || {}
+          };
+        }
       } catch (e) {}
-      return { challenges: {}, videos: {}, notes: {} };
+      return { challenges: {}, videos: {}, theory: {}, notes: {} };
     }
 
     let state = loadState();
@@ -1635,16 +2470,23 @@ const visto = new Map&lt;number, number&gt;();</div>
     let videoLangFilter = 'all';
     let videoSearchTerm = '';
 
+    // Flashcards state
+    let fcOrder = FLASHCARDS.map((_, i) => i);
+    let fcPos = 0;
+    let fcFlipped = false;
+
     function setSyncUI(dotClass, message, connected) {
       const dot = document.getElementById('syncDot');
+      const mobileDot = document.getElementById('mobileSyncDot');
       const statusEl = document.getElementById('syncStatus');
       const formEl = document.getElementById('syncForm');
       const actionsEl = document.getElementById('syncConnectedActions');
-      if (!dot || !statusEl) return;
-      dot.className = 'sync-dot' + (dotClass ? ' ' + dotClass : '');
-      statusEl.textContent = message;
-      formEl.style.display = connected ? 'none' : 'flex';
-      actionsEl.style.display = connected ? 'flex' : 'none';
+      const cls = 'sync-dot' + (dotClass ? ' ' + dotClass : '');
+      if (dot) dot.className = cls;
+      if (mobileDot) mobileDot.className = cls;
+      if (statusEl) statusEl.textContent = message;
+      if (formEl) formEl.style.display = connected ? 'none' : 'flex';
+      if (actionsEl) actionsEl.style.display = connected ? 'flex' : 'none';
     }
 
     function formatTime(iso) {
@@ -1722,9 +2564,11 @@ const visto = new Map&lt;number, number&gt;();</div>
           state = {
             challenges: data.state.challenges || {},
             videos: data.state.videos || {},
+            theory: data.state.theory || {},
             notes: data.state.notes || {}
           };
           saveState(false);
+          renderTheory();
           renderPhases();
           renderVideoTable();
           setSyncUI('ok', `Sincronizado (última atualização ${formatTime(data.state.updatedAt)}).`, true);
@@ -1755,6 +2599,47 @@ const visto = new Map&lt;number, number&gt;();</div>
         .replace(/"/g, '&quot;');
     }
 
+    // Render Guia Teórico
+    function renderTheory() {
+      const el = document.getElementById('theoryContainer');
+      el.innerHTML = THEORY_LESSONS.map((t, idx) => {
+        const isRead = !!state.theory[t.id];
+        return `
+          <article class="theory-card ${isRead ? 'read' : ''}">
+            <div class="theory-header">
+              <input class="theory-check" type="checkbox" data-theory-id="${t.id}" ${isRead ? 'checked' : ''} aria-label="Marcar lição ${escapeHtml(t.title)} como lida" />
+              <div class="theory-head-text">
+                <div class="theory-meta-row">
+                  <span class="pill pill-pattern">${escapeHtml(t.badge)}</span>
+                  <span class="pill">${escapeHtml(t.time)}</span>
+                  ${isRead ? '<span class="pill pill-easy">Lido</span>' : ''}
+                </div>
+                <h3 class="theory-title">${escapeHtml(t.title)}</h3>
+                <p class="theory-summary">${escapeHtml(t.summary)}</p>
+              </div>
+            </div>
+            <details class="theory-details" ${idx === 0 ? 'open' : ''}>
+              <summary>Resumo visual e exemplo em TypeScript</summary>
+              <div class="theory-body">${t.html}</div>
+            </details>
+          </article>
+        `;
+      }).join('');
+      updateStats();
+    }
+
+    // Render Flashcards
+    function renderFlashcard() {
+      const card = FLASHCARDS[fcOrder[fcPos]];
+      const stage = document.getElementById('fcStage');
+      stage.classList.toggle('flipped', fcFlipped);
+      document.getElementById('fcCounter').textContent = `Cartão ${fcPos + 1} de ${FLASHCARDS.length}`;
+      document.getElementById('fcTag').textContent = fcFlipped ? `Resposta — ${card.tag}` : `Pergunta — ${card.tag}`;
+      document.getElementById('fcText').textContent = fcFlipped ? card.a : card.q;
+      document.getElementById('fcHint').textContent = fcFlipped ? 'Toque para voltar à pergunta' : 'Toque no cartão para revelar a resposta';
+    }
+
+    // Render Fases de Desafios
     function renderPhases() {
       const container = document.getElementById('phasesContainer');
       container.innerHTML = PHASES.map(phase => {
@@ -1797,14 +2682,12 @@ const visto = new Map&lt;number, number&gt;();</div>
               <div class="challenge-top">
                 <input class="challenge-check" type="checkbox" data-challenge-id="${c.id}" ${isDone ? 'checked' : ''} aria-label="Marcar ${escapeHtml(c.title)} como concluído" />
                 <div class="challenge-body">
-                  <div class="challenge-line">
-                    <div class="challenge-name-group">
-                      <span class="challenge-num">${escapeHtml(c.num)}</span>
-                      <a class="challenge-link" href="${c.leetcode}" target="_blank" rel="noopener noreferrer">${escapeHtml(c.title)}</a>
-                      <span class="pill pill-pattern">${escapeHtml(c.pattern)}</span>
-                      <span class="pill pill-easy">Easy</span>
-                      ${c.todayTag ? `<span class="pill pill-today">${escapeHtml(c.todayTag)}</span>` : ''}
-                    </div>
+                  <div class="challenge-name-group">
+                    <span class="challenge-num">${escapeHtml(c.num)}</span>
+                    <a class="challenge-link" href="${c.leetcode}" target="_blank" rel="noopener noreferrer">${escapeHtml(c.title)}</a>
+                    <span class="pill pill-pattern">${escapeHtml(c.pattern)}</span>
+                    <span class="pill pill-easy">Easy</span>
+                    ${c.todayTag ? `<span class="pill pill-today">${escapeHtml(c.todayTag)}</span>` : ''}
                   </div>
                   <p class="challenge-goal">${escapeHtml(c.goal)}</p>
                   <div class="challenge-actions">
@@ -1838,7 +2721,7 @@ const visto = new Map&lt;number, number&gt;();</div>
               <span class="phase-badge ${allDone ? 'complete' : ''}">${doneInPhase} de ${totalInPhase} feitos</span>
             </div>
             <div class="phase-videos">
-              <div class="sub-label">Vídeos de apoio desta fase (assista antes ou quando travar)</div>
+              <div class="sub-label">Vídeos de apoio desta fase</div>
               <div class="video-chips">${phaseVideosHtml}</div>
             </div>
             <div class="challenge-list">${challengesHtml}</div>
@@ -1849,9 +2732,12 @@ const visto = new Map&lt;number, number&gt;();</div>
       updateStats();
     }
 
+    // Render Vídeos (Tabela Desktop + Cards Mobile)
     function renderVideoTable() {
       const tbody = document.getElementById('videoTableBody');
-      const empty = document.getElementById('videoEmpty');
+      const mobileCards = document.getElementById('videoCardsMobile');
+      const emptyDesk = document.getElementById('videoEmptyDesktop');
+      const emptyMob = document.getElementById('videoEmptyMobile');
       const term = videoSearchTerm.trim().toLowerCase();
 
       const filtered = VIDEOS.filter(v => {
@@ -1866,11 +2752,15 @@ const visto = new Map&lt;number, number&gt;();</div>
 
       if (filtered.length === 0) {
         tbody.innerHTML = '';
-        empty.style.display = 'block';
+        mobileCards.innerHTML = '';
+        emptyDesk.style.display = 'block';
+        emptyMob.style.display = 'block';
         return;
       }
 
-      empty.style.display = 'none';
+      emptyDesk.style.display = 'none';
+      emptyMob.style.display = 'none';
+
       tbody.innerHTML = filtered.map(v => {
         const watched = !!state.videos[v.id];
         return `
@@ -1885,24 +2775,45 @@ const visto = new Map&lt;number, number&gt;();</div>
           </tr>
         `;
       }).join('');
+
+      mobileCards.innerHTML = filtered.map(v => {
+        const watched = !!state.videos[v.id];
+        return `
+          <article class="video-mobile-card ${watched ? 'watched' : ''}">
+            <input type="checkbox" data-video-id="${v.id}" ${watched ? 'checked' : ''} aria-label="Marcar vídeo ${escapeHtml(v.title)} como visto" />
+            <div class="video-mobile-body">
+              <a class="video-mobile-title" href="${v.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(v.title)}</a>
+              <div class="video-mobile-meta">
+                <span>${escapeHtml(v.channel)}</span>
+                <span class="pill">${escapeHtml(v.category)}</span>
+                <span class="lang-tag ${v.lang === 'PT-BR' ? 'lang-pt' : 'lang-en'}">${v.lang}</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
     }
 
     function updateStats() {
       const allChallenges = PHASES.flatMap(p => p.challenges);
       const doneChallenges = allChallenges.filter(c => state.challenges[c.id]).length;
       const doneVideos = VIDEOS.filter(v => state.videos[v.id]).length;
+      const doneTheory = THEORY_LESSONS.filter(t => state.theory[t.id]).length;
 
-      const totalItems = allChallenges.length + VIDEOS.length;
-      const doneItems = doneChallenges + doneVideos;
+      const totalItems = allChallenges.length + VIDEOS.length + THEORY_LESSONS.length;
+      const doneItems = doneChallenges + doneVideos + doneTheory;
       const pct = Math.round((doneItems / totalItems) * 100);
 
       document.getElementById('totalPct').textContent = `${pct}%`;
+      document.getElementById('mobilePct').textContent = `${pct}%`;
       const bar = document.getElementById('totalBar');
       bar.style.width = `${pct}%`;
       bar.classList.toggle('done', pct === 100);
 
-      document.getElementById('challengesDone').textContent = `${doneChallenges} / ${allChallenges.length}`;
-      document.getElementById('videosDone').textContent = `${doneVideos} / ${VIDEOS.length}`;
+      document.getElementById('theoryDone').textContent = `${doneTheory}/${THEORY_LESSONS.length}`;
+      document.getElementById('challengesDone').textContent = `${doneChallenges}/${allChallenges.length}`;
+      document.getElementById('videosDone').textContent = `${doneVideos}/${VIDEOS.length}`;
+      document.getElementById('nav-teoria').textContent = `${doneTheory}/${THEORY_LESSONS.length}`;
 
       PHASES.forEach(p => {
         const done = p.challenges.filter(c => state.challenges[c.id]).length;
@@ -1910,6 +2821,60 @@ const visto = new Map&lt;number, number&gt;();</div>
         if (navEl) navEl.textContent = `${done}/${p.challenges.length}`;
       });
     }
+
+    // Navegação por abas no mobile/tablet
+    const TAB_LABELS = {
+      teoria: 'Modo teórico de bolso',
+      treino: 'Colinha e quiz rápido',
+      videos: 'Biblioteca de vídeos',
+      desafios: 'Trilha de desafios'
+    };
+
+    function setMobileTab(tabName) {
+      document.body.setAttribute('data-mobile-tab', tabName);
+      document.getElementById('mobileSubLabel').textContent = TAB_LABELS[tabName] || 'Caderno TypeScript';
+      document.querySelectorAll('[data-tab-panel]').forEach(panel => {
+        panel.classList.toggle('active-mobile', panel.dataset.tabPanel === tabName);
+      });
+      document.querySelectorAll('[data-mobile-nav]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mobileNav === tabName);
+      });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    document.querySelectorAll('[data-mobile-nav]').forEach(btn => {
+      btn.addEventListener('click', () => setMobileTab(btn.dataset.mobileNav));
+    });
+
+    // Gaveta lateral no mobile (para Sync e Progresso)
+    const sideRail = document.getElementById('sideRail');
+    const mobileBackdrop = document.getElementById('mobileBackdrop');
+    const mobileDrawerClose = document.getElementById('mobileDrawerClose');
+
+    function openMobileDrawer() {
+      sideRail.classList.add('mobile-open');
+      mobileBackdrop.classList.add('open');
+      mobileDrawerClose.style.display = 'inline-block';
+    }
+
+    function closeMobileDrawer() {
+      sideRail.classList.remove('mobile-open');
+      mobileBackdrop.classList.remove('open');
+      mobileDrawerClose.style.display = 'none';
+    }
+
+    document.getElementById('mobileSyncOpen').addEventListener('click', openMobileDrawer);
+    mobileDrawerClose.addEventListener('click', closeMobileDrawer);
+    mobileBackdrop.addEventListener('click', closeMobileDrawer);
+
+    document.querySelectorAll('[data-jump-tab]').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 960) {
+          setMobileTab(link.dataset.jumpTab);
+          closeMobileDrawer();
+        }
+      });
+    });
 
     // Delegação de eventos para checkboxes e notas
     document.addEventListener('change', (e) => {
@@ -1923,6 +2888,10 @@ const visto = new Map&lt;number, number&gt;();</div>
         saveState(true, true);
         renderPhases();
         renderVideoTable();
+      } else if (target.matches('[data-theory-id]')) {
+        state.theory[target.dataset.theoryId] = target.checked;
+        saveState(true, true);
+        renderTheory();
       }
     });
 
@@ -1932,6 +2901,34 @@ const visto = new Map&lt;number, number&gt;();</div>
         state.notes[target.dataset.noteId] = target.value;
         saveState(true, false);
       }
+    });
+
+    // Flashcards eventos
+    document.getElementById('fcStage').addEventListener('click', () => {
+      fcFlipped = !fcFlipped;
+      renderFlashcard();
+    });
+
+    document.getElementById('fcNext').addEventListener('click', () => {
+      fcPos = (fcPos + 1) % fcOrder.length;
+      fcFlipped = false;
+      renderFlashcard();
+    });
+
+    document.getElementById('fcPrev').addEventListener('click', () => {
+      fcPos = (fcPos - 1 + fcOrder.length) % fcOrder.length;
+      fcFlipped = false;
+      renderFlashcard();
+    });
+
+    document.getElementById('fcShuffle').addEventListener('click', () => {
+      for (let i = fcOrder.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [fcOrder[i], fcOrder[j]] = [fcOrder[j], fcOrder[i]];
+      }
+      fcPos = 0;
+      fcFlipped = false;
+      renderFlashcard();
     });
 
     // Eventos da sincronização na nuvem
@@ -1988,17 +2985,18 @@ const visto = new Map&lt;number, number&gt;();</div>
       });
     });
 
-    // Exportar e resetar
+    // Exportar resumo e resetar
     document.getElementById('btnExport').addEventListener('click', async () => {
       const allChallenges = PHASES.flatMap(p => p.challenges);
       const doneList = allChallenges.filter(c => state.challenges[c.id]).map(c => `- [x] ${c.num} ${c.title}`);
       const todoList = allChallenges.filter(c => !state.challenges[c.id]).map(c => `- [ ] ${c.num} ${c.title}`);
       const videosWatched = VIDEOS.filter(v => state.videos[v.id]).length;
+      const theoryRead = THEORY_LESSONS.filter(t => state.theory[t.id]).length;
       const text = [
         `Progresso TypeScript & LeetCode`,
-        `Desafios: ${doneList.length}/${allChallenges.length} | Vídeos: ${videosWatched}/${VIDEOS.length}`,
+        `Teoria: ${theoryRead}/${THEORY_LESSONS.length} | Desafios: ${doneList.length}/${allChallenges.length} | Vídeos: ${videosWatched}/${VIDEOS.length}`,
         ``,
-        `Concluídos:`,
+        `Desafios concluídos:`,
         ...(doneList.length ? doneList : ['- nenhum ainda']),
         ``,
         `Pendentes:`,
@@ -2018,13 +3016,14 @@ const visto = new Map&lt;number, number&gt;();</div>
     document.getElementById('btnReset').addEventListener('click', () => {
       if (!confirm('Zerar todas as marcações e anotações salvas?')) return;
       localStorage.removeItem(STORAGE_KEY);
-      state = { challenges: {}, videos: {}, notes: {} };
-      saveState();
+      state = { challenges: {}, videos: {}, theory: {}, notes: {} };
+      saveState(true, true);
+      renderTheory();
       renderPhases();
       renderVideoTable();
     });
 
-    // Mini-quiz de sintaxe
+    // Quiz (Sintaxe + Teoria)
     let qIdx = 0;
     let qHits = 0;
 
@@ -2064,7 +3063,7 @@ const visto = new Map&lt;number, number&gt;();</div>
           if (qIdx < QUIZ.length - 1) {
             document.getElementById('quizNext').style.display = 'inline-block';
           } else {
-            document.getElementById('quizFeedback').textContent += ` Fim do treino: ${qHits} de ${QUIZ.length}.`;
+            document.getElementById('quizFeedback').textContent += ` Fim do quiz: ${qHits} de ${QUIZ.length}.`;
             document.getElementById('quizRestart').style.display = 'inline-block';
           }
         });
@@ -2083,6 +3082,8 @@ const visto = new Map&lt;number, number&gt;();</div>
     });
 
     // Inicialização
+    renderTheory();
+    renderFlashcard();
     renderPhases();
     renderVideoTable();
     renderQuiz();
