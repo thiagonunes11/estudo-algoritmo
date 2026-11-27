@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trilha de Estudo — TypeScript & LeetCode</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F3F6FA;
+      --surface: #FFFFFF;
+      --surface-soft: #F8FAFD;
+      --ink: #131B26;
+      --muted: #526173;
+      --line: #D8E1EC;
+      --line-strong: #BFCDE0;
+      --ts-blue: #1D5BD6;
+      --ts-blue-soft: #EBF2FF;
+      --ts-blue-dark: #1543A3;
+      --ok-green: #147D52;
+      --ok-green-soft: #E7F7EF;
+      --warn-amber: #B45309;
+      --warn-amber-soft: #FEF4E4;
+      --err-red: #B91C1C;
+      --err-red-soft: #FEEEEE;
+      --code-bg: #161F2D;
+      --code-ink: #E6EDF7;
+      --radius: 8px;
+      --radius-sm: 5px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    code, pre {
+      font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+    }
+
+    a {
+      color: var(--ts-blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--ts-blue);
+      outline-offset: 2px;
+    }
+
+    /* Layout principal: barra lateral fixa + caderno de bancada */
+    .shell {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .rail {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+      padding: 24px 20px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: var(--ts-blue);
+      color: #FFFFFF;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 16px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 15px;
+      line-height: 1.25;
+      color: var(--ink);
+    }
+
+    .brand-sub {
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    /* Progresso lateral */
+    .progress-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .progress-pct {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ts-blue);
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 8px;
+      background: #E2EAF4;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--ts-blue);
+      transition: width 0.25s ease;
+    }
+
+    .bar-fill.done {
+      background: var(--ok-green);
+    }
+
+    .progress-stats {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .progress-stats strong {
+      display: block;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    /* Navegação */
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-heading {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      padding: 4px 10px;
+      margin-top: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .nav-link:hover {
+      background: var(--surface-soft);
+      text-decoration: none;
+    }
+
+    .nav-count {
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 1px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+    }
+
+    .rail-footer {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--line-strong);
+      color: var(--ink);
+      background: var(--surface-soft);
+    }
+
+    /* Coluna principal */
+    .main {
+      padding: 36px 44px 72px;
+      max-width: 980px;
+      width: 100%;
+    }
+
+    .hero {
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 32px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 3.2vw, 36px);
+      line-height: 1.18;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 68ch;
+      color: var(--muted);
+      font-size: 15.5px;
+    }
+
+    .routine-strip {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .routine-step {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+
+    .routine-time {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ts-blue);
+      margin-bottom: 3px;
+    }
+
+    .routine-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .routine-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Seções */
+    .section {
+      margin-bottom: 44px;
+      scroll-margin-top: 24px;
+    }
+
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.015em;
+    }
+
+    .section-desc {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14.5px;
+      max-width: 72ch;
+    }
+
+    /* Colinha de sintaxe */
+    .trap-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .trap-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .trap-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .trap-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .code-pair {
+      display: grid;
+      gap: 6px;
+    }
+
+    .code-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .code-bad {
+      background: var(--err-red-soft);
+      color: var(--err-red);
+      border-left: 3px solid var(--err-red);
+    }
+
+    .code-good {
+      background: var(--ok-green-soft);
+      color: var(--ok-green);
+      border-left: 3px solid var(--ok-green);
+    }
+
+    /* Quiz rápido de sintaxe */
+    .quiz-box {
+      margin-top: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .quiz-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .quiz-top h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .quiz-score {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ts-blue);
+      background: var(--ts-blue-soft);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .quiz-code {
+      background: var(--code-bg);
+      color: var(--code-ink);
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      overflow-x: auto;
+      margin: 10px 0 14px;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .quiz-opt {
+      text-align: left;
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .quiz-opt:hover:not(:disabled) {
+      border-color: var(--ts-blue);
+      background: var(--ts-blue-soft);
+    }
+
+    .quiz-opt.correct {
+      background: var(--ok-green-soft);
+      border-color: var(--ok-green);
+      color: var(--ok-green);
+      font-weight: 600;
+    }
+
+    .quiz-opt.wrong {
+      background: var(--err-red-soft);
+      border-color: var(--err-red);
+      color: var(--err-red);
+    }
+
+    .quiz-feedback {
+      margin-top: 12px;
+      font-size: 13.5px;
+      min-height: 22px;
+      color: var(--muted);
+    }
+
+    .quiz-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      background: var(--ts-blue);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: var(--ts-blue-dark);
+    }
+
+    /* Filtros de trilha */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .filter-btn {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: var(--ts-blue);
+      border-color: var(--ts-blue);
+      color: #FFFFFF;
+    }
+
+    /* Blocos de Fase */
+    .phase {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    .phase-header {
+      padding: 18px 20px;
+      background: var(--surface-soft);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .phase-title-wrap h3 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .phase-title-wrap p {
+      margin: 4px 0 0;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+
+    .phase-badge {
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--ts-blue-soft);
+      color: var(--ts-blue);
+      white-space: nowrap;
+    }
+
+    .phase-badge.complete {
+      background: var(--ok-green-soft);
+      color: var(--ok-green);
+    }
+
+    .phase-videos {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #FCFDFE;
+    }
+
+    .sub-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--muted);
+      margin: 0 0 10px;
+    }
+
+    .video-chips {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 8px;
+    }
+
+    .video-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      font-size: 13px;
+    }
+
+    .video-row.watched {
+      background: var(--ok-green-soft);
+      border-color: #B7E4CE;
+    }
+
+    .video-row input[type="checkbox"] {
+      margin-top: 3px;
+      width: 15px;
+      height: 15px;
+      accent-color: var(--ok-green);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .video-meta {
+      min-width: 0;
+    }
+
+    .video-meta a {
+      font-weight: 600;
+      color: var(--ink);
+      display: block;
+      line-height: 1.35;
+    }
+
+    .video-meta a:hover {
+      color: var(--ts-blue);
+    }
+
+    .video-channel {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Lista de desafios */
+    .challenge-list {
+      display: block;
+    }
+
+    .challenge {
+      padding: 16px 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .challenge:first-child {
+      border-top: none;
+    }
+
+    .challenge.done {
+      background: #FAFEFC;
+    }
+
+    .challenge.hidden {
+      display: none;
+    }
+
+    .challenge-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .challenge-check {
+      width: 19px;
+      height: 19px;
+      margin-top: 2px;
+      accent-color: var(--ok-green);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .challenge-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .challenge-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
+    }
+
+    .challenge-name-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .challenge-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .challenge-link {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .challenge-link:hover {
+      color: var(--ts-blue);
+    }
+
+    .challenge.done .challenge-link {
+      color: var(--ok-green);
+    }
+
+    .pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface-soft);
+      color: var(--muted);
+    }
+
+    .pill-easy {
+      background: var(--ok-green-soft);
+      border-color: #BDE7D2;
+      color: var(--ok-green);
+    }
+
+    .pill-pattern {
+      background: var(--ts-blue-soft);
+      border-color: #C7DCFF;
+      color: var(--ts-blue-dark);
+    }
+
+    .pill-today {
+      background: var(--warn-amber-soft);
+      border-color: #F6D49B;
+      color: var(--warn-amber);
+    }
+
+    .challenge-goal {
+      margin: 6px 0 10px;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+
+    .challenge-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .action-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .action-link:hover {
+      border-color: var(--ts-blue);
+      color: var(--ts-blue);
+      text-decoration: none;
+    }
+
+    .action-link.leetcode {
+      background: var(--ts-blue);
+      border-color: var(--ts-blue);
+      color: #FFFFFF;
+    }
+
+    .action-link.leetcode:hover {
+      background: var(--ts-blue-dark);
+      color: #FFFFFF;
+    }
+
+    details.study-details {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface-soft);
+      padding: 8px 12px;
+    }
+
+    details.study-details summary {
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .details-content {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+      font-size: 13.5px;
+    }
+
+    .details-content p {
+      margin: 0;
+    }
+
+    .ts-trap {
+      background: var(--warn-amber-soft);
+      border-left: 3px solid var(--warn-amber);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      color: #7C3806;
+      font-size: 13px;
+    }
+
+    .note-input {
+      width: 100%;
+      min-height: 58px;
+      resize: vertical;
+      font-family: inherit;
+      font-size: 13px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    /* Índice completo de vídeos */
+    .search-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .video-table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow-x: auto;
+    }
+
+    table.video-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    table.video-table th,
+    table.video-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle;
+    }
+
+    table.video-table th {
+      background: var(--surface-soft);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    table.video-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.video-table tr.watched-row {
+      background: #FAFEFC;
+    }
+
+    .lang-tag {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .lang-pt {
+      background: var(--ok-green-soft);
+      color: var(--ok-green);
+    }
+
+    .lang-en {
+      background: var(--ts-blue-soft);
+      color: var(--ts-blue-dark);
+    }
+
+    .empty-msg {
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Responsivo */
+    @media (max-width: 960px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .rail {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .main {
+        padding: 24px 18px 56px;
+      }
+
+      .routine-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .trap-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .routine-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- Barra lateral de controle e progresso -->
+    <aside class="rail" aria-label="Índice do plano de estudos">
+      <div class="brand">
+        <div class="brand-mark">TS</div>
+        <div>
+          <div class="brand-title">Caderno TypeScript</div>
+          <div class="brand-sub">Plano prático de LeetCode</div>
+        </div>
+      </div>
+
+      <div class="progress-box">
+        <div class="progress-top">
+          <span class="progress-label">Progresso total</span>
+          <span class="progress-pct" id="totalPct">0%</span>
+        </div>
+        <div class="bar-track" aria-hidden="true">
+          <div class="bar-fill" id="totalBar"></div>
+        </div>
+        <div class="progress-stats">
+          <div>
+            <strong id="challengesDone">0 / 13</strong>
+            Desafios feitos
+          </div>
+          <div>
+            <strong id="videosDone">0 / 33</strong>
+            Vídeos vistos
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-group">
+        <div class="nav-heading">Fundação</div>
+        <a class="nav-link" href="#sintaxe">Colinha de sintaxe <span class="nav-count">6 pontos</span></a>
+        <a class="nav-link" href="#quiz">Treino rápido <span class="nav-count">6 itens</span></a>
+
+        <div class="nav-heading">Trilha de desafios</div>
+        <a class="nav-link" href="#fase-1">Fase 1: Base e revisão <span class="nav-count" id="nav-f1">0/4</span></a>
+        <a class="nav-link" href="#fase-2">Fase 2: Map, Set e Big O <span class="nav-count" id="nav-f2">0/3</span></a>
+        <a class="nav-link" href="#fase-3">Fase 3: Dois ponteiros <span class="nav-count" id="nav-f3">0/3</span></a>
+        <a class="nav-link" href="#fase-4">Fase 4: Pilha e listas <span class="nav-count" id="nav-f4">0/3</span></a>
+
+        <div class="nav-heading">Biblioteca</div>
+        <a class="nav-link" href="#videos">Todos os vídeos <span class="nav-count">33</span></a>
+      </nav>
+
+      <div class="rail-footer">
+        <button class="btn-ghost" id="btnSyncExport" type="button">Exportar backup (trocar de aparelho)</button>
+        <button class="btn-ghost" id="btnSyncImport" type="button">Importar backup de outro aparelho</button>
+        <button class="btn-ghost" id="btnExport" type="button">Copiar resumo do progresso</button>
+        <button class="btn-ghost" id="btnReset" type="button">Zerar marcações salvas</button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="main">
+      <header class="hero">
+        <h1>Retomada de código em TypeScript e LeetCode</h1>
+        <p>
+          Material montado em cima dos pontos exatos que apareceram na sessão de hoje:
+          destravar a memória muscular da sintaxe, separar índice de valor, dominar
+          <code>Record</code> e <code>Map</code> e subir de nível nos padrões que mais caem em entrevistas.
+          Todo progresso e anotação fica salvo automaticamente no navegador.
+        </p>
+
+        <div class="routine-strip" aria-label="Rotina diária recomendada de 45 minutos">
+          <div class="routine-step">
+            <div class="routine-time">10 min</div>
+            <div class="routine-name">Aquecimento</div>
+            <div class="routine-desc">Releia a colinha ou refaça o mini-quiz sem olhar o código pronto.</div>
+          </div>
+          <div class="routine-step">
+            <div class="routine-time">20 min</div>
+            <div class="routine-name">Tentar na mão</div>
+            <div class="routine-desc">Faça um teste de mesa no papel antes de abrir o editor do LeetCode.</div>
+          </div>
+          <div class="routine-step">
+            <div class="routine-time">10 min</div>
+            <div class="routine-name">Assistir se travar</div>
+            <div class="routine-desc">Travou por mais de 15 min? Assista ao vídeo da fase e feche antes de codar.</div>
+          </div>
+          <div class="routine-step">
+            <div class="routine-time">5 min</div>
+            <div class="routine-name">Registrar o erro</div>
+            <div class="routine-desc">Escreva na caixa de notas do desafio o que te travou para não repetir.</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Seção 1: Colinha dos erros de hoje -->
+      <section class="section" id="sintaxe">
+        <div class="section-head">
+          <h2>Colinha de sintaxe: os 6 pontos de atenção de hoje</h2>
+        </div>
+        <p class="section-desc">
+          Antes de abrir o LeetCode, passe o olho nesses 6 contrastes. Eliminar esses erros pequenos
+          libera sua cabeça para pensar só na lógica do algoritmo.
+        </p>
+
+        <div class="trap-grid">
+          <article class="trap-card">
+            <h3 class="trap-title">1. Comparação vs. atribuição (e return)</h3>
+            <p class="trap-note">Um <code>=</code> guarda valor. Três <code>===</code> comparam. E <code>return</code> nunca usa <code>=</code>.</p>
+            <div class="code-pair">
+              <div class="code-line code-bad">if (a = b) { return = prefix; }</div>
+              <div class="code-line code-good">if (a === b) { return prefix; }</div>
+            </div>
+          </article>
+
+          <article class="trap-card">
+            <h3 class="trap-title">2. Índice vs. valor dentro do array</h3>
+            <p class="trap-note"><code>i</code> e <code>j</code> são posições (0, 1, 2). O dado de verdade está em <code>nums[i]</code>.</p>
+            <div class="code-pair">
+              <div class="code-line code-bad">if (i + j === target) return (i, j);</div>
+              <div class="code-line code-good">if (nums[i] + nums[j] === target) return [i, j];</div>
+            </div>
+          </article>
+
+          <article class="trap-card">
+            <h3 class="trap-title">3. Tipo do dado antes do método</h3>
+            <p class="trap-note"><code>.split('')</code> só existe em <code>string</code>, não em <code>number</code> nem em <code>string[]</code>.</p>
+            <div class="code-pair">
+              <div class="code-line code-bad">let rev = x.split('').reverse().join(''); // x é number</div>
+              <div class="code-line code-good">const str = x.toString();
+const rev = str.split('').reverse().join('');</div>
+            </div>
+          </article>
+
+          <article class="trap-card">
+            <h3 class="trap-title">4. Limite do loop com .length</h3>
+            <p class="trap-note">Sempre confira a grafia de <code>length</code> e qual variável está crescendo no <code>for</code>.</p>
+            <div class="code-pair">
+              <div class="code-line code-bad">for (let i = 0; i &lt; s; i++)
+for (let j = 0; i &lt; nums.lenght; j++)</div>
+              <div class="code-line code-good">for (let i = 0; i &lt; s.length; i++)
+for (let j = i + 1; j &lt; nums.length; j++)</div>
+            </div>
+          </article>
+
+          <article class="trap-card">
+            <h3 class="trap-title">5. Onde colocar o return no loop</h3>
+            <p class="trap-note"><code>return</code> encerra a função na hora. Só vai dentro do <code>for</code> quando quiser parar cedo.</p>
+            <div class="code-pair">
+              <div class="code-line code-bad">for (let i = 0; i &lt; s.length; i++) {
+  total += values[s[i]];
+  return total; // para na 1ª letra!
+}</div>
+              <div class="code-line code-good">for (let i = 0; i &lt; s.length; i++) {
+  total += values[s[i]];
+}
+return total; // só depois do loop</div>
+            </div>
+          </article>
+
+          <article class="trap-card">
+            <h3 class="trap-title">6. Objetos com vírgula, Record e Map</h3>
+            <p class="trap-note">Dentro de <code>{ ... }</code> separe chaves com vírgula. Use <code>Record</code> para tabela fixa e <code>Map</code> para buscas dinâmicas.</p>
+            <div class="code-pair">
+              <div class="code-line code-bad">const v: Record&lt;string, number&gt; = { I: 1; V: 5; };</div>
+              <div class="code-line code-good">const v: Record&lt;string, number&gt; = { I: 1, V: 5 };
+const visto = new Map&lt;number, number&gt;();</div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Mini-quiz interativo -->
+        <div class="quiz-box" id="quiz">
+          <div class="quiz-top">
+            <h3>Treino rápido de sintaxe (encontre o erro antes de codar)</h3>
+            <span class="quiz-score" id="quizScore">Pergunta 1 de 6</span>
+          </div>
+          <div id="quizQuestion"></div>
+          <pre class="quiz-code" id="quizCode"></pre>
+          <div class="quiz-options" id="quizOptions"></div>
+          <div class="quiz-feedback" id="quizFeedback"></div>
+          <div class="quiz-actions">
+            <button class="btn-primary" id="quizNext" type="button" style="display:none;">Próxima pergunta</button>
+            <button class="btn-ghost" id="quizRestart" type="button" style="display:none;">Refazer treino</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Seção 2: Trilha em 4 Fases -->
+      <section class="section" id="trilha">
+        <div class="section-head">
+          <h2>Trilha guiada em 4 fases</h2>
+        </div>
+        <p class="section-desc">
+          Siga na ordem das fases. Os 4 problemas que você resolveu hoje já vêm marcados na Fase 1 —
+          mas a meta é refazer os 4 do zero em 48 horas sem ajuda, antes de avançar pesado.
+        </p>
+
+        <div class="filter-bar" role="group" aria-label="Filtrar desafios">
+          <button class="filter-btn active" data-filter="all" type="button">Todos (13)</button>
+          <button class="filter-btn" data-filter="pending" type="button">Só pendentes</button>
+          <button class="filter-btn" data-filter="done" type="button">Só concluídos</button>
+        </div>
+
+        <div id="phasesContainer"></div>
+      </section>
+
+      <!-- Seção 3: Biblioteca Indexada de Vídeos -->
+      <section class="section" id="videos">
+        <div class="section-head">
+          <h2>Biblioteca indexada de vídeos</h2>
+        </div>
+        <p class="section-desc">
+          Todos os 33 links abaixo foram verificados no YouTube. Use a busca para encontrar rápido
+          um tema (ex: <em>loops</em>, <em>Map</em>, <em>Big O</em>, <em>Two Sum</em>) e marque conforme assistir.
+        </p>
+
+        <div class="search-row">
+          <input class="search-input" id="videoSearch" type="search" placeholder="Buscar por título, canal ou tema (ex: TypeScript, Map, Augusto Galego, NeetCode)..." aria-label="Buscar vídeos" />
+          <button class="filter-btn active" data-vcat="all" type="button">Todos</button>
+          <button class="filter-btn" data-vcat="PT-BR" type="button">Só PT-BR</button>
+          <button class="filter-btn" data-vcat="EN" type="button">Só NeetCode (EN)</button>
+        </div>
+
+        <div class="video-table-wrap">
+          <table class="video-table">
+            <thead>
+              <tr>
+                <th style="width:42px;">Visto</th>
+                <th>Vídeo</th>
+                <th>Canal</th>
+                <th>Tema</th>
+                <th>Idioma</th>
+              </tr>
+            </thead>
+            <tbody id="videoTableBody"></tbody>
+          </table>
+          <div class="empty-msg" id="videoEmpty" style="display:none;">Nenhum vídeo encontrado com esse filtro.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'ts_leetcode_study_v1';
+
+    const VIDEOS = [
+      // Fase 1 - TypeScript & JS Base
+      { id: 'v_ts_manual', phase: 1, category: 'TypeScript', lang: 'PT-BR', channel: 'Manual do Dev', title: 'Introdução ao TypeScript para iniciantes', url: 'https://www.youtube.com/watch?v=HMjXHypKF0o' },
+      { id: 'v_ts_battisti', phase: 1, category: 'TypeScript', lang: 'PT-BR', channel: 'Matheus Battisti - Hora de Codar', title: 'Curso de TypeScript na Prática - Aprenda em 1 Hora', url: 'https://www.youtube.com/watch?v=lCemyQeSCV8' },
+      { id: 'v_ts_2026', phase: 1, category: 'TypeScript', lang: 'PT-BR', channel: 'Uanela Como', title: 'Curso de TypeScript Completo Para Iniciantes', url: 'https://www.youtube.com/watch?v=lTAMJ2ZTKPk' },
+      { id: 'v_js_loops', phase: 1, category: 'JS Base', lang: 'PT-BR', channel: 'Matheus Battisti - Hora de Codar', title: 'Curso de JavaScript #05 - Loops (for, while e do while)', url: 'https://www.youtube.com/watch?v=HiIVg3r40f4' },
+      { id: 'v_js_rep', phase: 1, category: 'JS Base', lang: 'PT-BR', channel: 'Curso em Vídeo', title: 'Repetições (Parte 1) - Curso JavaScript #13', url: 'https://www.youtube.com/watch?v=5rZqYPKIwkY' },
+      { id: 'v_js_array', phase: 1, category: 'JS Base', lang: 'PT-BR', channel: 'Programação Web', title: 'Curso JavaScript Completo: Aula 11 - Array (Matrizes)', url: 'https://www.youtube.com/watch?v=HNf8AhMa4f0' },
+      { id: 'v_js_obj', phase: 1, category: 'JS Base', lang: 'PT-BR', channel: 'Matheus Battisti - Hora de Codar', title: 'Como percorrer um objeto em JavaScript (loop)', url: 'https://www.youtube.com/watch?v=ZeaN3ShDnH4' },
+
+      // Fase 2 - Big O, Hash Map, Set
+      { id: 'v_bigo', phase: 2, category: 'Big O & DSA', lang: 'PT-BR', channel: 'Augusto Galego', title: 'BIG O NOTATION | Explicação para Entrevistas', url: 'https://www.youtube.com/watch?v=g-hIXvdDeZk' },
+      { id: 'v_hashmap5', phase: 2, category: 'Map & Set', lang: 'PT-BR', channel: 'Ali Silveira', title: 'Hashmap em 5 minutos | Estruturas de dados', url: 'https://www.youtube.com/watch?v=4gIzjuF6D6g' },
+      { id: 'v_mapset', phase: 2, category: 'Map & Set', lang: 'PT-BR', channel: 'Mago Acadêmico', title: 'JavaScript Set e Map | Todo dev precisa entender', url: 'https://www.youtube.com/watch?v=FyLsmzL6u3o' },
+      { id: 'v_set_cfb', phase: 2, category: 'Map & Set', lang: 'PT-BR', channel: 'CFBCursos', title: 'Aprendendo sobre a Coleção SET em JavaScript', url: 'https://www.youtube.com/watch?v=v24QAyoiAo0' },
+      { id: 'v_dsa60', phase: 2, category: 'Big O & DSA', lang: 'PT-BR', channel: 'Augusto Galego', title: 'DSA Completo: Domine Estruturas de Dados em 60min', url: 'https://www.youtube.com/watch?v=TcNt1aW1OMM' },
+
+      // Fase 3 - Two Pointers & Sliding Window
+      { id: 'v_tp_vitor', phase: 3, category: 'Padrões', lang: 'PT-BR', channel: 'Vitor Hugo Dev', title: 'LeetCode: Técnica dos Dois Ponteiros', url: 'https://www.youtube.com/watch?v=tdeMzsh5Z0w' },
+      { id: 'v_tp_guto', phase: 3, category: 'Padrões', lang: 'PT-BR', channel: 'Augusto Galego', title: 'LeetCode 167 - Two Sum II - Explicação (Two Pointers)', url: 'https://www.youtube.com/watch?v=f7GpcuyYRIQ' },
+      { id: 'v_sw_felipe', phase: 3, category: 'Padrões', lang: 'PT-BR', channel: 'Felipe Cabrera - ByLearn', title: 'Simplificando Sliding Window: Entenda de Vez', url: 'https://www.youtube.com/watch?v=qfKTeiaEigM' },
+      { id: 'v_sw_kipper', phase: 3, category: 'Padrões', lang: 'PT-BR', channel: 'Fernanda Kipper', title: 'Resolvendo Desafios do LeetCode (Janela Deslizante)', url: 'https://www.youtube.com/watch?v=C-K0ecQBA7k' },
+      { id: 'v_sw_guto', phase: 3, category: 'Padrões', lang: 'PT-BR', channel: 'Augusto Galego', title: 'Sliding Window | LeetCode 1493', url: 'https://www.youtube.com/watch?v=WxRYkxaNZn8' },
+
+      // Fase 4 - Entrevistas
+      { id: 'v_entrevista_guto', phase: 4, category: 'Entrevistas', lang: 'PT-BR', channel: 'Augusto Galego', title: 'O LeetCode que mais cai em entrevista', url: 'https://www.youtube.com/watch?v=b7Vy-uIQUrE' },
+
+      // Resoluções específicas (PT-BR + NeetCode)
+      { id: 'v_twosum_emilio', phase: 0, category: 'Resoluções', lang: 'PT-BR', channel: 'Emilio Heinzmann', title: 'Two Sum: o problema mais famoso de entrevistas | LeetCode 1', url: 'https://www.youtube.com/watch?v=acnfGWmAGNQ' },
+      { id: 'v_twosum_pedro', phase: 0, category: 'Resoluções', lang: 'PT-BR', channel: 'Pedro Passos', title: 'Solução LeetCode Two Sum | LeetCode em Detalhes #01', url: 'https://www.youtube.com/watch?v=5QkgFXUDT4I' },
+      { id: 'v_twosum_nuve', phase: 0, category: 'Resoluções', lang: 'PT-BR', channel: 'nuve', title: 'Lógica e Algoritmos #76: Two Sum (JavaScript)', url: 'https://www.youtube.com/watch?v=kT27BBTysSI' },
+      { id: 'v_nc_twosum', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Two Sum - LeetCode 1 (HashMap)', url: 'https://www.youtube.com/watch?v=KLlXCFG5TnA' },
+      { id: 'v_nc_palnum', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Palindrome Number - LeetCode 9', url: 'https://www.youtube.com/watch?v=yubRKwixN-U' },
+      { id: 'v_nc_roman', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Roman to Integer - LeetCode 13', url: 'https://www.youtube.com/watch?v=3jdxYj3DD98' },
+      { id: 'v_nc_lcp', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Longest Common Prefix - LeetCode 14', url: 'https://www.youtube.com/watch?v=0sWShKIJoo4' },
+      { id: 'v_nc_dup', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Contains Duplicate - LeetCode 217', url: 'https://www.youtube.com/watch?v=3OamzN90kPg' },
+      { id: 'v_nc_anagram', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Valid Anagram - LeetCode 242', url: 'https://www.youtube.com/watch?v=9UtInBqnCgA' },
+      { id: 'v_nc_validpal', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Valid Palindrome - LeetCode 125', url: 'https://www.youtube.com/watch?v=jJXJ16kPFWg' },
+      { id: 'v_nc_stock', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Best Time to Buy and Sell Stock - LeetCode 121', url: 'https://www.youtube.com/watch?v=1pkOgXD63yU' },
+      { id: 'v_nc_bsearch', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Binary Search - LeetCode 704', url: 'https://www.youtube.com/watch?v=s4DPM8ct1pI' },
+      { id: 'v_nc_parens', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Valid Parentheses - Stack - LeetCode 20', url: 'https://www.youtube.com/watch?v=WTzjTskDFMg' },
+      { id: 'v_nc_merge', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Merge Two Sorted Lists - LeetCode 21', url: 'https://www.youtube.com/watch?v=XIdigk956u0' },
+      { id: 'v_nc_revlist', phase: 0, category: 'Resoluções', lang: 'EN', channel: 'NeetCode', title: 'Reverse Linked List - LeetCode 206', url: 'https://www.youtube.com/watch?v=G0_I-ZF0S38' }
+    ];
+
+    const VIDEO_MAP = Object.fromEntries(VIDEOS.map(v => [v.id, v]));
+
+    const PHASES = [
+      {
+        id: 1,
+        anchor: 'fase-1',
+        title: 'Fase 1: Base de TypeScript, loops e revisão dos 4 de hoje',
+        subtitle: 'Dias 1 a 3 — Foco em digitar limpo sem errar for, length, índices e tipos básicos.',
+        videoIds: ['v_ts_manual', 'v_ts_battisti', 'v_js_loops', 'v_js_rep', 'v_js_array', 'v_js_obj'],
+        challenges: [
+          {
+            id: 'c_1',
+            num: '#1',
+            title: 'Two Sum (força bruta)',
+            leetcode: 'https://leetcode.com/problems/two-sum/',
+            pattern: 'Loops aninhados',
+            doneByDefault: true,
+            todayTag: 'Feito hoje — refazer em 48h',
+            goal: 'Reescrever de cabeça os dois loops com j = i + 1, somando nums[i] + nums[j] e devolvendo [i, j].',
+            hint: 'Para cada elemento i, teste apenas os elementos à frente (j = i + 1) para não somar o número com ele mesmo.',
+            trap: 'Não confunda i + j (índices) com nums[i] + nums[j] (valores), e use colchetes [i, j] no return.',
+            videos: ['v_twosum_emilio', 'v_nc_twosum']
+          },
+          {
+            id: 'c_9',
+            num: '#9',
+            title: 'Palindrome Number',
+            leetcode: 'https://leetcode.com/problems/palindrome-number/',
+            pattern: 'Strings e conversão',
+            doneByDefault: true,
+            todayTag: 'Feito hoje — refazer em 48h',
+            goal: 'Converter x para string com x.toString(), inverter com split/reverse/join e comparar str === reverse.',
+            hint: 'Transforme o número em string uma única vez em const str = x.toString() e use str nos dois passos.',
+            trap: 'Número não tem .split() e não compare string com number no return.',
+            videos: ['v_nc_palnum']
+          },
+          {
+            id: 'c_13',
+            num: '#13',
+            title: 'Roman to Integer',
+            leetcode: 'https://leetcode.com/problems/roman-to-integer/',
+            pattern: 'Record / Tabela',
+            doneByDefault: true,
+            todayTag: 'Feito hoje — refazer em 48h',
+            goal: 'Montar o objeto Record<string, number>, comparar atual < proximo e deixar o return total fora do for.',
+            hint: 'Se a letra atual vale menos que a próxima (ex: I antes de V), subtraia do total; senão, some.',
+            trap: 'Use vírgulas dentro do objeto { I: 1, V: 5 } e nunca coloque return total dentro do for.',
+            videos: ['v_nc_roman']
+          },
+          {
+            id: 'c_14',
+            num: '#14',
+            title: 'Longest Common Prefix',
+            leetcode: 'https://leetcode.com/problems/longest-common-prefix/',
+            pattern: 'Matriz / Colunas',
+            doneByDefault: true,
+            todayTag: 'Feito hoje — refazer em 48h',
+            goal: 'Percorrer coluna i da primeira palavra e checar todas as outras palavras j = 1..n antes de somar no prefix.',
+            hint: 'Só adicione letter ao prefix depois que o loop interno terminar sem nenhuma palavra diferente.',
+            trap: 'i vai até strs[0].length (letras); j vai até strs.length (palavras). E return não tem sinal de =.',
+            videos: ['v_nc_lcp']
+          }
+        ]
+      },
+      {
+        id: 2,
+        anchor: 'fase-2',
+        title: 'Fase 2: Dicionários (Map e Set) e Big O',
+        subtitle: 'Dias 4 a 7 — O salto mais importante para entrevistas: trocar dois loops O(n²) por um loop O(n).',
+        videoIds: ['v_bigo', 'v_hashmap5', 'v_mapset', 'v_set_cfb', 'v_dsa60'],
+        challenges: [
+          {
+            id: 'c_217',
+            num: '#217',
+            title: 'Contains Duplicate',
+            leetcode: 'https://leetcode.com/problems/contains-duplicate/',
+            pattern: 'Set',
+            doneByDefault: false,
+            goal: 'Usar new Set<number>() para verificar em O(1) se um número já apareceu antes enquanto percorre o array.',
+            hint: 'Crie const vistos = new Set<number>(). Para cada num: se vistos.has(num), retorne true; senão, vistos.add(num).',
+            trap: 'No Set os métodos são .has() e .add() (não .includes() nem .push()).',
+            videos: ['v_nc_dup', 'v_mapset']
+          },
+          {
+            id: 'c_242',
+            num: '#242',
+            title: 'Valid Anagram',
+            leetcode: 'https://leetcode.com/problems/valid-anagram/',
+            pattern: 'Hash Map / Frequência',
+            doneByDefault: false,
+            goal: 'Contar quantas vezes cada letra aparece em s usando Record<string, number> ou Map e descontar ao percorrer t.',
+            hint: 'Primeiro cheque se s.length !== t.length (se forem diferentes, já retorna false!).',
+            trap: 'Ao contar em um Record, lembre de inicializar se ainda não existir: contagem[ch] = (contagem[ch] ?? 0) + 1.',
+            videos: ['v_nc_anagram', 'v_hashmap5']
+          },
+          {
+            id: 'c_1_opt',
+            num: '#1 (Otimizado)',
+            title: 'Two Sum em O(n) com Map',
+            leetcode: 'https://leetcode.com/problems/two-sum/',
+            pattern: 'Hash Map',
+            doneByDefault: false,
+            goal: 'Refazer o Two Sum usando apenas UM for e um new Map<number, number>() guardando valor → índice.',
+            hint: 'Para cada nums[i], calcule falta = target - nums[i]. Pergunte ao Map se "falta" já foi visto antes!',
+            trap: 'No TypeScript, map.get(falta) retorna number | undefined. Use if (map.has(falta)) return [map.get(falta)!, i].',
+            videos: ['v_twosum_pedro', 'v_twosum_nuve', 'v_nc_twosum']
+          }
+        ]
+      },
+      {
+        id: 3,
+        anchor: 'fase-3',
+        title: 'Fase 3: Dois Ponteiros, Janela Deslizante e Busca Binária',
+        subtitle: 'Dias 8 a 11 — Aprender a mover dois índices (left e right) de forma inteligente em arrays e strings.',
+        videoIds: ['v_tp_vitor', 'v_tp_guto', 'v_sw_felipe', 'v_sw_kipper', 'v_sw_guto'],
+        challenges: [
+          {
+            id: 'c_125',
+            num: '#125',
+            title: 'Valid Palindrome',
+            leetcode: 'https://leetcode.com/problems/valid-palindrome/',
+            pattern: 'Two Pointers',
+            doneByDefault: false,
+            goal: 'Limpar a string (minúsculas + alfanumérico) e comparar as pontas com left = 0 e right = clean.length - 1.',
+            hint: 'Use while (left < right): se clean[left] !== clean[right] retorna false; senão, left++ e right--.',
+            trap: 'Cuidado com o último índice válido: é length - 1, nunca length.',
+            videos: ['v_nc_validpal', 'v_tp_vitor']
+          },
+          {
+            id: 'c_121',
+            num: '#121',
+            title: 'Best Time to Buy and Sell Stock',
+            leetcode: 'https://leetcode.com/problems/best-time-to-buy-and-sell-stock/',
+            pattern: 'Sliding Window',
+            doneByDefault: false,
+            goal: 'Manter o menor preço visto até agora (minPrice) e calcular o maior lucro possível em uma única passagem.',
+            hint: 'Se o preço de hoje for menor que minPrice, atualize minPrice. Senão, compare (preco - minPrice) com maxProfit.',
+            trap: 'Você só pode vender depois de comprar — por isso atualizamos minPrice andando da esquerda para a direita.',
+            videos: ['v_nc_stock', 'v_sw_felipe']
+          },
+          {
+            id: 'c_704',
+            num: '#704',
+            title: 'Binary Search',
+            leetcode: 'https://leetcode.com/problems/binary-search/',
+            pattern: 'Binary Search',
+            doneByDefault: false,
+            goal: 'Encontrar target em array ordenado cortando o espaço de busca pela metade a cada passo em O(log n).',
+            hint: 'Calcule mid = Math.floor((left + right) / 2). Se nums[mid] < target, suba left = mid + 1; se maior, desça right = mid - 1.',
+            trap: 'Em JavaScript/TypeScript, divisão de inteiros gera decimal (ex: 5 / 2 = 2.5). Sempre envolva com Math.floor().',
+            videos: ['v_nc_bsearch']
+          }
+        ]
+      },
+      {
+        id: 4,
+        anchor: 'fase-4',
+        title: 'Fase 4: Pilha (Stack) e Listas Ligadas',
+        subtitle: 'Dias 12 a 15 — Clássicos obrigatórios de entrevistas técnicas júnior e pleno.',
+        videoIds: ['v_entrevista_guto'],
+        challenges: [
+          {
+            id: 'c_20',
+            num: '#20',
+            title: 'Valid Parentheses',
+            leetcode: 'https://leetcode.com/problems/valid-parentheses/',
+            pattern: 'Stack (Pilha)',
+            doneByDefault: false,
+            goal: 'Usar um array como pilha (.push e .pop) junto com um Record ligando fechamento → abertura.',
+            hint: 'Quando vir "(", "[" ou "{", dê push na pilha. Quando vir fechamento, dê pop e cheque se bate com o par esperado.',
+            trap: 'No final, só é válido se a pilha estiver completamente vazia: return stack.length === 0.',
+            videos: ['v_nc_parens', 'v_entrevista_guto']
+          },
+          {
+            id: 'c_21',
+            num: '#21',
+            title: 'Merge Two Sorted Lists',
+            leetcode: 'https://leetcode.com/problems/merge-two-sorted-lists/',
+            pattern: 'Linked List',
+            doneByDefault: false,
+            goal: 'Unir duas listas ligadas ordenadas usando um nó fictício (dummy = new ListNode(0)) e um ponteiro tail.',
+            hint: 'Enquanto list1 e list2 não forem null, ligue tail.next no menor dos dois e avance aquele ponteiro.',
+            trap: 'Quando o while terminar, ainda pode sobrar o resto de list1 ou list2 — faça tail.next = list1 ?? list2.',
+            videos: ['v_nc_merge']
+          },
+          {
+            id: 'c_206',
+            num: '#206',
+            title: 'Reverse Linked List',
+            leetcode: 'https://leetcode.com/problems/reverse-linked-list/',
+            pattern: 'Linked List',
+            doneByDefault: false,
+            goal: 'Inverter uma lista ligada mantendo 3 referências: prev (null), current (head) e next.',
+            hint: 'Em cada passo: salve next = current.next, aponte current.next = prev, avance prev = current e current = next.',
+            trap: 'Se você mudar current.next antes de salvar em next, perde o resto da lista!',
+            videos: ['v_nc_revlist']
+          }
+        ]
+      }
+    ];
+
+    const QUIZ = [
+      {
+        q: 'Qual é o erro nessa função do Two Sum?',
+        code: `for (let i = 0; i < nums.length; i++) {\n  for (let j = i + 1; j < nums.length; j++) {\n    if (i + j === target) return [i, j];\n  }\n}`,
+        options: [
+          'Está somando os índices (i + j) em vez dos valores (nums[i] + nums[j]).',
+          'O segundo for deveria começar em j = 0.',
+          'Faltou usar parênteses (i, j) no return.'
+        ],
+        answer: 0,
+        explain: 'i e j são apenas as posições. Para somar os números do array, usamos nums[i] + nums[j].'
+      },
+      {
+        q: 'Por que esse código de Palindrome Number não compila em TypeScript?',
+        code: `function isPalindrome(x: number): boolean {\n  const rev = x.split('').reverse().join('');\n  return rev === x;\n}`,
+        options: [
+          'Porque reverse() não existe em JavaScript.',
+          'Porque x é number (não tem .split()) e rev é string (não dá para comparar com number).',
+          'Porque faltou ponto e vírgula depois de boolean.'
+        ],
+        answer: 1,
+        explain: 'Primeiro converta const str = x.toString(), depois use str no .split() e no return rev === str.'
+      },
+      {
+        q: 'O que acontece quando esse loop do Roman to Integer roda com s = "XIV"?',
+        code: `for (let i = 0; i < s.length; i++) {\n  total += values[s[i]];\n  return total;\n}`,
+        options: [
+          'Soma todas as letras normalmente e retorna 16.',
+          'Retorna logo na primeira letra ("X" → 10) e ignora o resto da string.',
+          'Dá loop infinito.'
+        ],
+        answer: 1,
+        explain: 'return encerra a função imediatamente. O return total precisa ficar depois da chave que fecha o for.'
+      },
+      {
+        q: 'Qual declaração de objeto Record<string, number> está correta?',
+        code: `// Escolha a opção válida em TypeScript:`,
+        options: [
+          'const v: Record<string, number> = { I: 1; V: 5; X: 10; };',
+          'const v: Record<string, number> = { I: 1, V: 5, X: 10 };',
+          'const v[] = { I = 1, V = 5, X = 10 };'
+        ],
+        answer: 1,
+        explain: 'Dentro de um objeto { ... }, propriedades usam dois-pontos (I: 1) e são separadas por vírgula.'
+      },
+      {
+        q: 'Qual linha tem erro de sintaxe em JavaScript/TypeScript?',
+        code: `if (strs[j][i] !== letter) {\n  return = prefix;\n}`,
+        options: [
+          'strs[j][i] não pode ter dois colchetes seguidos.',
+          '!== deveria ser !=.',
+          'return = prefix está errado — o correto é return prefix.'
+        ],
+        answer: 2,
+        explain: 'return não é uma variável; nunca leva sinal de igual. O certo é return prefix;'
+      },
+      {
+        q: 'Em strs = ["flower", "flow", "flight"], o que representam strs.length e strs[0].length?',
+        code: `for (let i = 0; i < ???; i++) { // percorre letras\n  for (let j = 1; j < ???; j++) { // percorre palavras`,
+        options: [
+          'strs.length é a quantidade de palavras (3); strs[0].length é a quantidade de letras da 1ª palavra (6).',
+          'Os dois valem 6.',
+          'strs.length é o total de letras somadas de todas as palavras.'
+        ],
+        answer: 0,
+        explain: 'strs é um array de 3 palavras; strs[0] é a string "flower" de 6 letras.'
+      }
+    ];
+
+    // Estado persistente
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch (e) {}
+      const defaults = { challenges: {}, videos: {}, notes: {} };
+      PHASES.forEach(p => p.challenges.forEach(c => {
+        if (c.doneByDefault) defaults.challenges[c.id] = true;
+      }));
+      return defaults;
+    }
+
+    let state = loadState();
+    let challengeFilter = 'all';
+    let videoLangFilter = 'all';
+    let videoSearchTerm = '';
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function renderPhases() {
+      const container = document.getElementById('phasesContainer');
+      container.innerHTML = PHASES.map(phase => {
+        const doneInPhase = phase.challenges.filter(c => state.challenges[c.id]).length;
+        const totalInPhase = phase.challenges.length;
+        const allDone = doneInPhase === totalInPhase;
+
+        const phaseVideosHtml = phase.videoIds.map(vidId => {
+          const v = VIDEO_MAP[vidId];
+          if (!v) return '';
+          const watched = !!state.videos[v.id];
+          return `
+            <label class="video-row ${watched ? 'watched' : ''}">
+              <input type="checkbox" data-video-id="${v.id}" ${watched ? 'checked' : ''} />
+              <div class="video-meta">
+                <a href="${v.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(v.title)}</a>
+                <div class="video-channel">${escapeHtml(v.channel)} (${v.lang})</div>
+              </div>
+            </label>
+          `;
+        }).join('');
+
+        const challengesHtml = phase.challenges.map(c => {
+          const isDone = !!state.challenges[c.id];
+          const hidden =
+            (challengeFilter === 'done' && !isDone) ||
+            (challengeFilter === 'pending' && isDone);
+
+          const videoLinksHtml = c.videos.map(vidId => {
+            const v = VIDEO_MAP[vidId];
+            if (!v) return '';
+            const label = v.lang === 'PT-BR' ? `Vídeo PT-BR (${v.channel.split(' - ')[0]})` : `Vídeo NeetCode (EN)`;
+            return `<a class="action-link" href="${v.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
+          }).join('');
+
+          const noteVal = state.notes[c.id] || '';
+
+          return `
+            <article class="challenge ${isDone ? 'done' : ''} ${hidden ? 'hidden' : ''}">
+              <div class="challenge-top">
+                <input class="challenge-check" type="checkbox" data-challenge-id="${c.id}" ${isDone ? 'checked' : ''} aria-label="Marcar ${escapeHtml(c.title)} como concluído" />
+                <div class="challenge-body">
+                  <div class="challenge-line">
+                    <div class="challenge-name-group">
+                      <span class="challenge-num">${escapeHtml(c.num)}</span>
+                      <a class="challenge-link" href="${c.leetcode}" target="_blank" rel="noopener noreferrer">${escapeHtml(c.title)}</a>
+                      <span class="pill pill-pattern">${escapeHtml(c.pattern)}</span>
+                      <span class="pill pill-easy">Easy</span>
+                      ${c.todayTag ? `<span class="pill pill-today">${escapeHtml(c.todayTag)}</span>` : ''}
+                    </div>
+                  </div>
+                  <p class="challenge-goal">${escapeHtml(c.goal)}</p>
+                  <div class="challenge-actions">
+                    <a class="action-link leetcode" href="${c.leetcode}" target="_blank" rel="noopener noreferrer">Abrir no LeetCode</a>
+                    ${videoLinksHtml}
+                  </div>
+                  <details class="study-details">
+                    <summary>Dica sem spoiler, pegadinha de TS e minhas anotações</summary>
+                    <div class="details-content">
+                      <p><strong>Dica de lógica:</strong> ${escapeHtml(c.hint)}</p>
+                      <div class="ts-trap"><strong>Atenção no TypeScript:</strong> ${escapeHtml(c.trap)}</div>
+                      <div>
+                        <label for="note-${c.id}" style="display:block;font-size:12.5px;font-weight:600;margin-bottom:4px;">Anotação pessoal (tempo, onde travou, data da revisão):</label>
+                        <textarea class="note-input" id="note-${c.id}" data-note-id="${c.id}" placeholder="Ex: Refiz em 12 min sem olhar; esqueci o .length uma vez...">${escapeHtml(noteVal)}</textarea>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+
+        return `
+          <div class="phase" id="${phase.anchor}">
+            <div class="phase-header">
+              <div class="phase-title-wrap">
+                <h3>${escapeHtml(phase.title)}</h3>
+                <p>${escapeHtml(phase.subtitle)}</p>
+              </div>
+              <span class="phase-badge ${allDone ? 'complete' : ''}">${doneInPhase} de ${totalInPhase} feitos</span>
+            </div>
+            <div class="phase-videos">
+              <div class="sub-label">Vídeos de apoio desta fase (assista antes ou quando travar)</div>
+              <div class="video-chips">${phaseVideosHtml}</div>
+            </div>
+            <div class="challenge-list">${challengesHtml}</div>
+          </div>
+        `;
+      }).join('');
+
+      updateStats();
+    }
+
+    function renderVideoTable() {
+      const tbody = document.getElementById('videoTableBody');
+      const empty = document.getElementById('videoEmpty');
+      const term = videoSearchTerm.trim().toLowerCase();
+
+      const filtered = VIDEOS.filter(v => {
+        if (videoLangFilter !== 'all' && v.lang !== videoLangFilter) return false;
+        if (!term) return true;
+        return (
+          v.title.toLowerCase().includes(term) ||
+          v.channel.toLowerCase().includes(term) ||
+          v.category.toLowerCase().includes(term)
+        );
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      tbody.innerHTML = filtered.map(v => {
+        const watched = !!state.videos[v.id];
+        return `
+          <tr class="${watched ? 'watched-row' : ''}">
+            <td>
+              <input type="checkbox" data-video-id="${v.id}" ${watched ? 'checked' : ''} aria-label="Marcar vídeo ${escapeHtml(v.title)} como visto" style="width:16px;height:16px;accent-color:var(--ok-green);cursor:pointer;" />
+            </td>
+            <td><a href="${v.url}" target="_blank" rel="noopener noreferrer" style="font-weight:600;">${escapeHtml(v.title)}</a></td>
+            <td>${escapeHtml(v.channel)}</td>
+            <td><span class="pill">${escapeHtml(v.category)}</span></td>
+            <td><span class="lang-tag ${v.lang === 'PT-BR' ? 'lang-pt' : 'lang-en'}">${v.lang}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updateStats() {
+      const allChallenges = PHASES.flatMap(p => p.challenges);
+      const doneChallenges = allChallenges.filter(c => state.challenges[c.id]).length;
+      const doneVideos = VIDEOS.filter(v => state.videos[v.id]).length;
+
+      const totalItems = allChallenges.length + VIDEOS.length;
+      const doneItems = doneChallenges + doneVideos;
+      const pct = Math.round((doneItems / totalItems) * 100);
+
+      document.getElementById('totalPct').textContent = `${pct}%`;
+      const bar = document.getElementById('totalBar');
+      bar.style.width = `${pct}%`;
+      bar.classList.toggle('done', pct === 100);
+
+      document.getElementById('challengesDone').textContent = `${doneChallenges} / ${allChallenges.length}`;
+      document.getElementById('videosDone').textContent = `${doneVideos} / ${VIDEOS.length}`;
+
+      PHASES.forEach(p => {
+        const done = p.challenges.filter(c => state.challenges[c.id]).length;
+        const navEl = document.getElementById(`nav-f${p.id}`);
+        if (navEl) navEl.textContent = `${done}/${p.challenges.length}`;
+      });
+    }
+
+    // Delegação de eventos para checkboxes e notas
+    document.addEventListener('change', (e) => {
+      const target = e.target;
+      if (target.matches('[data-challenge-id]')) {
+        state.challenges[target.dataset.challengeId] = target.checked;
+        saveState();
+        renderPhases();
+      } else if (target.matches('[data-video-id]')) {
+        state.videos[target.dataset.videoId] = target.checked;
+        saveState();
+        renderPhases();
+        renderVideoTable();
+      }
+    });
+
+    document.addEventListener('input', (e) => {
+      const target = e.target;
+      if (target.matches('[data-note-id]')) {
+        state.notes[target.dataset.noteId] = target.value;
+        saveState();
+      }
+    });
+
+    // Filtros de desafio
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        challengeFilter = btn.dataset.filter;
+        document.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('active', b === btn));
+        renderPhases();
+      });
+    });
+
+    // Busca e filtro de vídeos
+    document.getElementById('videoSearch').addEventListener('input', (e) => {
+      videoSearchTerm = e.target.value;
+      renderVideoTable();
+    });
+
+    document.querySelectorAll('[data-vcat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        videoLangFilter = btn.dataset.vcat;
+        document.querySelectorAll('[data-vcat]').forEach(b => b.classList.toggle('active', b === btn));
+        renderVideoTable();
+      });
+    });
+
+    // Backup / sincronização entre dispositivos
+    document.getElementById('btnSyncExport').addEventListener('click', async () => {
+      const payload = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+      try {
+        await navigator.clipboard.writeText(payload);
+        const btn = document.getElementById('btnSyncExport');
+        btn.textContent = 'Código de backup copiado!';
+        setTimeout(() => { btn.textContent = 'Exportar backup (trocar de aparelho)'; }, 2500);
+      } catch (e) {
+        prompt('Copie este código e cole no outro dispositivo:', payload);
+      }
+    });
+
+    document.getElementById('btnSyncImport').addEventListener('click', () => {
+      const raw = prompt('Cole o código de backup exportado do outro dispositivo:');
+      if (!raw || !raw.trim()) return;
+      try {
+        const parsed = JSON.parse(decodeURIComponent(escape(atob(raw.trim()))));
+        if (!parsed || typeof parsed !== 'object') throw new Error('invalid');
+        state = {
+          challenges: parsed.challenges || {},
+          videos: parsed.videos || {},
+          notes: parsed.notes || {}
+        };
+        saveState();
+        renderPhases();
+        renderVideoTable();
+        const btn = document.getElementById('btnSyncImport');
+        btn.textContent = 'Backup importado!';
+        setTimeout(() => { btn.textContent = 'Importar backup de outro aparelho'; }, 2500);
+      } catch (e) {
+        alert('Código de backup inválido. Verifique se copiou ele completo.');
+      }
+    });
+
+    // Exportar e resetar
+    document.getElementById('btnExport').addEventListener('click', async () => {
+      const allChallenges = PHASES.flatMap(p => p.challenges);
+      const doneList = allChallenges.filter(c => state.challenges[c.id]).map(c => `- [x] ${c.num} ${c.title}`);
+      const todoList = allChallenges.filter(c => !state.challenges[c.id]).map(c => `- [ ] ${c.num} ${c.title}`);
+      const videosWatched = VIDEOS.filter(v => state.videos[v.id]).length;
+      const text = [
+        `Progresso TypeScript & LeetCode`,
+        `Desafios: ${doneList.length}/${allChallenges.length} | Vídeos: ${videosWatched}/${VIDEOS.length}`,
+        ``,
+        `Concluídos:`,
+        ...(doneList.length ? doneList : ['- nenhum ainda']),
+        ``,
+        `Pendentes:`,
+        ...(todoList.length ? todoList : ['- todos concluídos!'])
+      ].join('\n');
+
+      try {
+        await navigator.clipboard.writeText(text);
+        const btn = document.getElementById('btnExport');
+        btn.textContent = 'Resumo copiado!';
+        setTimeout(() => { btn.textContent = 'Copiar resumo do progresso'; }, 2000);
+      } catch (e) {
+        alert(text);
+      }
+    });
+
+    document.getElementById('btnReset').addEventListener('click', () => {
+      if (!confirm('Zerar todas as marcações e anotações salvas?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = { challenges: {}, videos: {}, notes: {} };
+      saveState();
+      renderPhases();
+      renderVideoTable();
+    });
+
+    // Mini-quiz de sintaxe
+    let qIdx = 0;
+    let qHits = 0;
+
+    function renderQuiz() {
+      const item = QUIZ[qIdx];
+      document.getElementById('quizScore').textContent = `Pergunta ${qIdx + 1} de ${QUIZ.length} (${qHits} acertos)`;
+      document.getElementById('quizQuestion').textContent = item.q;
+      document.getElementById('quizCode').textContent = item.code;
+      document.getElementById('quizFeedback').textContent = '';
+      document.getElementById('quizNext').style.display = 'none';
+      document.getElementById('quizRestart').style.display = 'none';
+
+      const optsEl = document.getElementById('quizOptions');
+      optsEl.innerHTML = item.options.map((opt, idx) =>
+        `<button class="quiz-opt" type="button" data-opt="${idx}">${escapeHtml(opt)}</button>`
+      ).join('');
+
+      optsEl.querySelectorAll('.quiz-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const picked = Number(btn.dataset.opt);
+          const allBtns = optsEl.querySelectorAll('.quiz-opt');
+          allBtns.forEach((b, i) => {
+            b.disabled = true;
+            if (i === item.answer) b.classList.add('correct');
+            else if (i === picked) b.classList.add('wrong');
+          });
+
+          if (picked === item.answer) {
+            qHits++;
+            document.getElementById('quizFeedback').textContent = `Acertou! ${item.explain}`;
+          } else {
+            document.getElementById('quizFeedback').textContent = `Quase! ${item.explain}`;
+          }
+
+          document.getElementById('quizScore').textContent = `Pergunta ${qIdx + 1} de ${QUIZ.length} (${qHits} acertos)`;
+
+          if (qIdx < QUIZ.length - 1) {
+            document.getElementById('quizNext').style.display = 'inline-block';
+          } else {
+            document.getElementById('quizFeedback').textContent += ` Fim do treino: ${qHits} de ${QUIZ.length}.`;
+            document.getElementById('quizRestart').style.display = 'inline-block';
+          }
+        });
+      });
+    }
+
+    document.getElementById('quizNext').addEventListener('click', () => {
+      qIdx++;
+      renderQuiz();
+    });
+
+    document.getElementById('quizRestart').addEventListener('click', () => {
+      qIdx = 0;
+      qHits = 0;
+      renderQuiz();
+    });
+
+    // Inicialização
+    renderPhases();
+    renderVideoTable();
+    renderQuiz();
+  </script>
+</body>
+</html>
