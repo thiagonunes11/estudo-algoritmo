@@ -232,6 +232,94 @@
       gap: 8px;
     }
 
+    /* Sincronização na nuvem */
+    .sync-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .sync-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .sync-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #94A3B8;
+      flex-shrink: 0;
+    }
+
+    .sync-dot.ok { background: var(--ok-green); }
+    .sync-dot.busy { background: var(--ts-blue); }
+    .sync-dot.warn { background: var(--warn-amber); }
+    .sync-dot.err { background: var(--err-red); }
+
+    .sync-status {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .sync-form {
+      display: flex;
+      gap: 6px;
+    }
+
+    .sync-input {
+      flex: 1;
+      min-width: 0;
+      padding: 6px 8px;
+      font-family: inherit;
+      font-size: 12.5px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .sync-btn {
+      background: var(--ts-blue);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sync-btn:hover {
+      background: var(--ts-blue-dark);
+    }
+
+    .sync-btn.secondary {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .sync-btn.secondary:hover {
+      color: var(--ink);
+      border-color: var(--line-strong);
+    }
+
     .btn-ghost {
       background: transparent;
       border: 1px solid var(--line);
@@ -989,6 +1077,22 @@
         </div>
       </div>
 
+      <div class="sync-box" aria-label="Sincronização na nuvem">
+        <div class="sync-head">
+          <span class="sync-title">Sincronizar aparelhos</span>
+          <span class="sync-dot" id="syncDot" title="Status da nuvem"></span>
+        </div>
+        <div class="sync-status" id="syncStatus">Digite a mesma chave no PC e no celular para sincronizar.</div>
+        <form class="sync-form" id="syncForm">
+          <input class="sync-input" id="syncKeyInput" type="password" autocomplete="off" placeholder="Sua chave (mín. 4)" aria-label="Chave de sincronização" />
+          <button class="sync-btn" id="syncConnectBtn" type="submit">Conectar</button>
+        </form>
+        <div id="syncConnectedActions" style="display:none; gap:6px;">
+          <button class="sync-btn secondary" id="syncPullBtn" type="button" style="flex:1;">Atualizar agora</button>
+          <button class="sync-btn secondary" id="syncDisconnectBtn" type="button">Sair</button>
+        </div>
+      </div>
+
       <nav class="nav-group">
         <div class="nav-heading">Fundação</div>
         <a class="nav-link" href="#sintaxe">Colinha de sintaxe <span class="nav-count">6 pontos</span></a>
@@ -1197,6 +1301,8 @@ const visto = new Map&lt;number, number&gt;();</div>
 
   <script>
     const STORAGE_KEY = 'ts_leetcode_study_v1';
+    const SYNC_KEY_STORAGE = 'ts_leetcode_sync_key_v1';
+    const SYNC_API = '/api/progress';
 
     const VIDEOS = [
       // Fase 1 - TypeScript & JS Base
@@ -1527,14 +1633,124 @@ const visto = new Map&lt;number, number&gt;();</div>
     }
 
     let state = loadState();
+    let syncKey = '';
+    try { syncKey = localStorage.getItem(SYNC_KEY_STORAGE) || ''; } catch (e) {}
+    let syncTimer = null;
+    let isPushing = false;
     let challengeFilter = 'all';
     let videoLangFilter = 'all';
     let videoSearchTerm = '';
 
-    function saveState() {
+    function setSyncUI(dotClass, message, connected) {
+      const dot = document.getElementById('syncDot');
+      const statusEl = document.getElementById('syncStatus');
+      const formEl = document.getElementById('syncForm');
+      const actionsEl = document.getElementById('syncConnectedActions');
+      if (!dot || !statusEl) return;
+      dot.className = 'sync-dot' + (dotClass ? ' ' + dotClass : '');
+      statusEl.textContent = message;
+      formEl.style.display = connected ? 'none' : 'flex';
+      actionsEl.style.display = connected ? 'flex' : 'none';
+    }
+
+    function formatTime(iso) {
+      try {
+        const d = iso ? new Date(iso) : new Date();
+        return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      } catch (e) {
+        return 'agora';
+      }
+    }
+
+    async function pushToCloud() {
+      if (!syncKey) return;
+      isPushing = true;
+      setSyncUI('busy', 'Salvando na nuvem...', true);
+      try {
+        const res = await fetch(SYNC_API, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-sync-key': syncKey
+          },
+          body: JSON.stringify(state)
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 503) {
+          setSyncUI('warn', 'Falta conectar o Upstash Redis na Vercel (Storage) e dar Redeploy.', true);
+        } else if (res.status === 401) {
+          setSyncUI('err', 'Chave recusada pelo servidor. Clique em Sair e tente novamente.', true);
+        } else if (!res.ok) {
+          setSyncUI('err', data.message || 'Erro ao salvar na nuvem (salvo localmente).', true);
+        } else {
+          setSyncUI('ok', `Salvo na nuvem às ${formatTime(data.updatedAt)}.`, true);
+        }
+      } catch (e) {
+        setSyncUI('warn', 'Sem conexão agora (salvo localmente neste aparelho).', true);
+      } finally {
+        isPushing = false;
+      }
+    }
+
+    function scheduleCloudPush(immediate = false) {
+      if (!syncKey) return;
+      if (syncTimer) clearTimeout(syncTimer);
+      if (immediate) {
+        pushToCloud();
+      } else {
+        syncTimer = setTimeout(pushToCloud, 600);
+      }
+    }
+
+    async function pullFromCloud(uploadIfEmpty = false) {
+      if (!syncKey) return false;
+      setSyncUI('busy', 'Sincronizando com a nuvem...', true);
+      try {
+        const res = await fetch(SYNC_API, {
+          method: 'GET',
+          headers: { 'x-sync-key': syncKey }
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 503) {
+          setSyncUI('warn', 'Falta conectar o Upstash Redis na Vercel (Storage) e dar Redeploy.', true);
+          return false;
+        }
+        if (res.status === 401) {
+          setSyncUI('err', 'Chave incorreta. Clique em Sair e digite a chave certa.', true);
+          return false;
+        }
+        if (!res.ok) {
+          setSyncUI('err', data.message || 'Não foi possível ler da nuvem.', true);
+          return false;
+        }
+
+        if (data.exists && data.state) {
+          state = {
+            challenges: data.state.challenges || {},
+            videos: data.state.videos || {},
+            notes: data.state.notes || {}
+          };
+          saveState(false);
+          renderPhases();
+          renderVideoTable();
+          setSyncUI('ok', `Sincronizado (última atualização ${formatTime(data.state.updatedAt)}).`, true);
+        } else if (uploadIfEmpty) {
+          await pushToCloud();
+        } else {
+          setSyncUI('ok', 'Conectado! Seu progresso será salvo automaticamente.', true);
+        }
+        return true;
+      } catch (e) {
+        setSyncUI('warn', 'Offline ou rodando local — sincronização ativa quando abrir pela Vercel.', true);
+        return false;
+      }
+    }
+
+    function saveState(shouldSync = true, immediate = false) {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       } catch (e) {}
+      if (shouldSync) scheduleCloudPush(immediate);
     }
 
     function escapeHtml(str) {
@@ -1706,11 +1922,11 @@ const visto = new Map&lt;number, number&gt;();</div>
       const target = e.target;
       if (target.matches('[data-challenge-id]')) {
         state.challenges[target.dataset.challengeId] = target.checked;
-        saveState();
+        saveState(true, true);
         renderPhases();
       } else if (target.matches('[data-video-id]')) {
         state.videos[target.dataset.videoId] = target.checked;
-        saveState();
+        saveState(true, true);
         renderPhases();
         renderVideoTable();
       }
@@ -1720,7 +1936,38 @@ const visto = new Map&lt;number, number&gt;();</div>
       const target = e.target;
       if (target.matches('[data-note-id]')) {
         state.notes[target.dataset.noteId] = target.value;
-        saveState();
+        saveState(true, false);
+      }
+    });
+
+    // Eventos da sincronização na nuvem
+    document.getElementById('syncForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('syncKeyInput');
+      const key = input.value.trim();
+      if (key.length < 4) {
+        setSyncUI('err', 'Use uma chave com pelo menos 4 caracteres.', false);
+        return;
+      }
+      syncKey = key;
+      try { localStorage.setItem(SYNC_KEY_STORAGE, syncKey); } catch (err) {}
+      input.value = '';
+      await pullFromCloud(true);
+    });
+
+    document.getElementById('syncPullBtn').addEventListener('click', () => {
+      pullFromCloud(false);
+    });
+
+    document.getElementById('syncDisconnectBtn').addEventListener('click', () => {
+      syncKey = '';
+      try { localStorage.removeItem(SYNC_KEY_STORAGE); } catch (err) {}
+      setSyncUI('', 'Desconectado. Digite sua chave para sincronizar novamente.', false);
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && syncKey && !isPushing && !syncTimer) {
+        pullFromCloud(false);
       }
     });
 
@@ -1880,6 +2127,9 @@ const visto = new Map&lt;number, number&gt;();</div>
     renderPhases();
     renderVideoTable();
     renderQuiz();
+    if (syncKey) {
+      pullFromCloud(true);
+    }
   </script>
 </body>
 </html>
