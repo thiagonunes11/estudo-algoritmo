@@ -1250,8 +1250,8 @@ const visto = new Map&lt;number, number&gt;();</div>
           <h2>Trilha guiada em 4 fases</h2>
         </div>
         <p class="section-desc">
-          Siga na ordem das fases. Os 4 problemas que você resolveu hoje já vêm marcados na Fase 1 —
-          mas a meta é refazer os 4 do zero em 48 horas sem ajuda, antes de avançar pesado.
+          Siga na ordem das fases. Conecte sua chave em <strong>Sincronizar aparelhos</strong> para carregar
+          seu progresso salvo na nuvem — a meta da Fase 1 é refazer os 4 problemas do zero em 48 horas sem ajuda.
         </p>
 
         <div class="filter-bar" role="group" aria-label="Filtrar desafios">
@@ -1619,17 +1619,13 @@ const visto = new Map&lt;number, number&gt;();</div>
       }
     ];
 
-    // Estado persistente
+    // Estado persistente (começa zerado em dispositivos novos até conectar na nuvem)
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) return JSON.parse(raw);
       } catch (e) {}
-      const defaults = { challenges: {}, videos: {}, notes: {} };
-      PHASES.forEach(p => p.challenges.forEach(c => {
-        if (c.doneByDefault) defaults.challenges[c.id] = true;
-      }));
-      return defaults;
+      return { challenges: {}, videos: {}, notes: {} };
     }
 
     let state = loadState();
