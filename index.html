@@ -1109,8 +1109,6 @@
       </nav>
 
       <div class="rail-footer">
-        <button class="btn-ghost" id="btnSyncExport" type="button">Exportar backup (trocar de aparelho)</button>
-        <button class="btn-ghost" id="btnSyncImport" type="button">Importar backup de outro aparelho</button>
         <button class="btn-ghost" id="btnExport" type="button">Copiar resumo do progresso</button>
         <button class="btn-ghost" id="btnReset" type="button">Zerar marcações salvas</button>
       </div>
@@ -1988,41 +1986,6 @@ const visto = new Map&lt;number, number&gt;();</div>
         document.querySelectorAll('[data-vcat]').forEach(b => b.classList.toggle('active', b === btn));
         renderVideoTable();
       });
-    });
-
-    // Backup / sincronização entre dispositivos
-    document.getElementById('btnSyncExport').addEventListener('click', async () => {
-      const payload = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
-      try {
-        await navigator.clipboard.writeText(payload);
-        const btn = document.getElementById('btnSyncExport');
-        btn.textContent = 'Código de backup copiado!';
-        setTimeout(() => { btn.textContent = 'Exportar backup (trocar de aparelho)'; }, 2500);
-      } catch (e) {
-        prompt('Copie este código e cole no outro dispositivo:', payload);
-      }
-    });
-
-    document.getElementById('btnSyncImport').addEventListener('click', () => {
-      const raw = prompt('Cole o código de backup exportado do outro dispositivo:');
-      if (!raw || !raw.trim()) return;
-      try {
-        const parsed = JSON.parse(decodeURIComponent(escape(atob(raw.trim()))));
-        if (!parsed || typeof parsed !== 'object') throw new Error('invalid');
-        state = {
-          challenges: parsed.challenges || {},
-          videos: parsed.videos || {},
-          notes: parsed.notes || {}
-        };
-        saveState();
-        renderPhases();
-        renderVideoTable();
-        const btn = document.getElementById('btnSyncImport');
-        btn.textContent = 'Backup importado!';
-        setTimeout(() => { btn.textContent = 'Importar backup de outro aparelho'; }, 2500);
-      } catch (e) {
-        alert('Código de backup inválido. Verifique se copiou ele completo.');
-      }
     });
 
     // Exportar e resetar
