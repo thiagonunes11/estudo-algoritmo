@@ -80,6 +80,7 @@ module.exports = async function handler(req, res) {
       const sanitized = {
         challenges: body.challenges && typeof body.challenges === 'object' ? body.challenges : {},
         videos: body.videos && typeof body.videos === 'object' ? body.videos : {},
+        theory: body.theory && typeof body.theory === 'object' ? body.theory : {},
         notes: body.notes && typeof body.notes === 'object' ? body.notes : {},
         updatedAt: new Date().toISOString(),
       };
